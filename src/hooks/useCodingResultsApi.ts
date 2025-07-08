@@ -12,6 +12,7 @@ import { apiClient } from '../services/apiClient';
 export const useCodingResultsApi = (docId: string | null) => {
   const [primarySuggestions, setPrimarySuggestions] = useState<CodeSuggestion[]>([]);
   const [secondarySuggestions, setSecondarySuggestions] = useState<CodeSuggestion[]>([]);
+  const [comments, setComments] = useState<Record<string, Comment[]>>({});
   const [reviewStats, setReviewStats] = useState<ApiReviewStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -373,6 +374,18 @@ export const useCodingResultsApi = (docId: string | null) => {
     };
   };
 
+  // Helper function to transform API comments to frontend Comment format
+  const transformApiComments = (apiComments: ApiComment[] = []): Comment[] => {
+    return apiComments
+      .map((apiComment, index) => ({
+      id: apiComment.comment_id || `comment-${index}`,
+      text: apiComment.comment,
+      user: apiComment.user,
+      timestamp: apiComment.timestamp
+    }))
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()); // Sort latest first
+  };
+
   // Fetch coding results from API
   const fetchCodingResults = async (docId: string) => {
     try {
@@ -395,8 +408,28 @@ export const useCodingResultsApi = (docId: string | null) => {
 
       setPrimarySuggestions(transformedPrimary);
       setSecondarySuggestions(transformedSecondary);
-      setReviewStats(data.review_stats);
 
+      // Extract and transform comments from API response
+      const allComments: Record<string, Comment[]> = {};
+      
+      // Process primary codes comments
+      data.results.primary_codes.forEach(code => {
+        if (code.comments && code.comments.length > 0) {
+          const codeId = code.code_id || `${code.diagnosis_code}-${code.rank}-primary`;
+          allComments[codeId] = transformApiComments(code.comments);
+        }
+      });
+      
+      // Process secondary codes comments
+      data.results.secondary_codes.forEach(code => {
+        if (code.comments && code.comments.length > 0) {
+          const codeId = code.code_id || `${code.diagnosis_code}-${code.rank}-secondary`;
+          allComments[codeId] = transformApiComments(code.comments);
+        }
+      });
+
+      setComments(allComments);
+      setReviewStats(data.review_stats);
     } catch (err) {
       console.error('Error fetching coding results:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch coding results');
@@ -404,6 +437,7 @@ export const useCodingResultsApi = (docId: string | null) => {
       // Fallback to empty state on error
       setPrimarySuggestions([]);
       setSecondarySuggestions([]);
+      setComments({});
       setReviewStats(null);
     } finally {
       setLoading(false);
@@ -416,6 +450,7 @@ export const useCodingResultsApi = (docId: string | null) => {
     } else {
       setPrimarySuggestions([]);
       setSecondarySuggestions([]);
+      setComments({});
       setReviewStats(null);
       setLoading(false);
       setError(null);
@@ -425,6 +460,7 @@ export const useCodingResultsApi = (docId: string | null) => {
   return {
     primarySuggestions,
     secondarySuggestions,
+    comments,
     reviewStats,
     loading,
     error,

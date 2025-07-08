@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Document, DocumentContent, HighlightedEvidence } from '../types';
+import { Document, DocumentContent, HighlightedEvidence, SearchHighlight } from '../types';
 import { useImagePreloader } from './useImagePreloader';
 
 export const useDocumentViewer = (
@@ -13,6 +13,7 @@ export const useDocumentViewer = (
   const [pageInputValue, setPageInputValue] = useState('');
   const [isEditingPage, setIsEditingPage] = useState(false);
   const [highlightedEvidence, setHighlightedEvidence] = useState<HighlightedEvidence | null>(null);
+  const [searchHighlight, setSearchHighlight] = useState<SearchHighlight | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showHighlight, setShowHighlight] = useState(false);
   const [actualCurrentPage, setActualCurrentPage] = useState(1);
@@ -73,6 +74,11 @@ export const useDocumentViewer = (
     clearAllHighlightTimeouts();
     setShowHighlight(false);
     setHighlightedEvidence(null);
+    // Don't clear search highlight here as it's managed separately
+  };
+
+  const clearSearchHighlight = () => {
+    setSearchHighlight(null);
   };
 
   const setHighlightWithTimeout = (evidence: HighlightedEvidence) => {
@@ -204,6 +210,34 @@ export const useDocumentViewer = (
     setHighlightWithTimeout(highlightEvidence);
   };
 
+  const navigateToSearchMatch = async (searchMatch: SearchHighlight) => {
+    // Clear any existing evidence highlight when navigating to search match
+    clearHighlight();
+
+    // Check if we're already on the correct document and page
+    if (searchMatch.document === selectedDocument && searchMatch.page === currentPage && !isTransitioning) {
+      // Same document and page - set search highlight immediately
+      setSearchHighlight(searchMatch);
+      return;
+    }
+
+    // Different document or page - need transition
+    // Navigate to the target document/page first
+    if (searchMatch.document !== selectedDocument) {
+      // Switch document directly to target page
+      await switchDocument(searchMatch.document, searchMatch.page);
+    } else {
+      // Same document, different page
+      await goToPage(searchMatch.page);
+      setTargetPage(searchMatch.page);
+    }
+    
+    // After navigation is complete, set search highlight
+    setTimeout(() => {
+      setSearchHighlight(searchMatch);
+    }, 300);
+  };
+
   const handlePageInputClick = () => {
     setIsEditingPage(true);
     setPageInputValue(currentPage.toString());
@@ -253,6 +287,7 @@ export const useDocumentViewer = (
     isEditingPage,
     highlightedEvidence,
     showHighlight,
+    searchHighlight,
     isTransitioning,
     imageRef,
     preloadProgress,
@@ -263,6 +298,8 @@ export const useDocumentViewer = (
     handleZoomOut, // Kept for compatibility
     handleZoomReset, // Kept for compatibility
     navigateToEvidence,
+    navigateToSearchMatch,
+    clearSearchHighlight,
     handlePageInputClick,
     handlePageInputChange,
     handlePageInputKeyPress,

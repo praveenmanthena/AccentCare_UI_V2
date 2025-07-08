@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { SelectionCoords, SelectedArea, DocumentContent, HighlightedEvidence } from '../../types';
+import { SelectionCoords, SelectedArea, DocumentContent, HighlightedEvidence, SearchHighlight } from '../../types';
 
 interface PDFViewerProps {
   selectedDocument: string;
@@ -7,6 +7,7 @@ interface PDFViewerProps {
   zoomLevel: number;
   highlightedEvidence: HighlightedEvidence | null;
   showHighlight: boolean;
+  searchHighlight: SearchHighlight | null;
   isAddingICD: boolean;
   isTransitioning: boolean;
   onAreaSelected: (area: SelectedArea) => void;
@@ -23,6 +24,7 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({
   zoomLevel,
   highlightedEvidence,
   showHighlight,
+  searchHighlight,
   isAddingICD,
   isTransitioning,
   onAreaSelected,
@@ -609,6 +611,29 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({
     };
   };
 
+  // Calculate search highlight box style
+  const getSearchHighlightStyle = (pageNumber: number, imageElement: HTMLImageElement) => {
+    if (!searchHighlight || searchHighlight.page !== pageNumber) return {};
+
+    const imgWidth = imageElement.offsetWidth;
+    const imgHeight = imageElement.offsetHeight;
+    const bbox = searchHighlight.boundingBox;
+    
+    // Calculate dimensions using rendered image dimensions
+    const left = bbox.x_min * imgWidth;
+    const top = bbox.y_min * imgHeight;
+    const width = (bbox.x_max - bbox.x_min) * imgWidth;
+    const height = (bbox.y_max - bbox.y_min) * imgHeight;
+    
+    return {
+      left: `${left}px`,
+      top: `${top}px`,
+      width: `${width}px`,
+      height: `${height}px`,
+      borderRadius: '2px',
+    };
+  };
+
   if (pageNumbers.length === 0) {
     return (
       <div className={`flex-1 overflow-auto font-sans ${isAddingICD ? 'cursor-crosshair' : ''}`} style={{ backgroundColor: '#f8f9fa' }}>
@@ -801,6 +826,18 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({
                     <div
                       className="absolute border-3 border-blue-500 bg-blue-200 bg-opacity-25 pointer-events-none transition-all duration-700 ease-in-out animate-pulse shadow-2xl"
                       style={getHighlightStyle(pageNumber, imageRefs.current[pageNumber])}
+                    />
+                  )}
+                  
+                  {/* Search Highlight Bounding Box */}
+                  {!isTransitioning && searchHighlight &&
+                   searchHighlight.document === selectedDocument && 
+                   searchHighlight.page === pageNumber && 
+                   imageRefs.current[pageNumber] && (
+                    <div
+                      className="absolute border-2 border-green-700 bg-green-500 bg-opacity-20 pointer-events-none transition-all duration-300"
+                      style={getSearchHighlightStyle(pageNumber, imageRefs.current[pageNumber])}
+                      title={`Search match: "${searchHighlight.textSnippet}"`}
                     />
                   )}
                   

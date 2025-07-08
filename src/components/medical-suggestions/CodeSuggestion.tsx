@@ -478,9 +478,11 @@ export const CodeSuggestion: React.FC<CodeSuggestionProps> = ({
                             {comment.text}
                           </p>
                           <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500 font-medium">
-                              {comment.timestamp}
-                            </span>
+                            <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
+                              <span className="font-semibold text-blue-600">{comment.user}</span>
+                              <span>•</span>
+                              <span>{new Date(comment.timestamp).toLocaleString()}</span>
+                            </div>
                             <button
                               onClick={() =>
                                 onStartEditingComment(suggestion.id, comment.id)

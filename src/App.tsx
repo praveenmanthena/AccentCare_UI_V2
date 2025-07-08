@@ -28,6 +28,7 @@ const HomeHealthCodingInterface = () => {
     primarySuggestions,
     secondarySuggestions,
     reviewStats,
+    comments,
     loading: codingLoading,
     error: codingError,
   } = useCodingResultsApi(selectedEpisodeDocId);
@@ -116,6 +117,7 @@ const HomeHealthCodingInterface = () => {
       primarySuggestions={primarySuggestions}
       secondarySuggestions={secondarySuggestions}
       reviewStats={reviewStats}
+      comments={comments}
       onReturnToDashboard={returnToDashboard}
     />
   );

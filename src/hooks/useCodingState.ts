@@ -7,6 +7,7 @@ interface UseCodingStateProps {
   initialSecondarySuggestions?: CodeSuggestion[];
   reviewStats?: ApiReviewStats | null;
   selectedEpisodeDocId?: string;
+  initialComments?: Record<string, Comment[]>;
 }
 
 export const useCodingState = (props: UseCodingStateProps = {}) => {
@@ -14,13 +15,14 @@ export const useCodingState = (props: UseCodingStateProps = {}) => {
     initialPrimarySuggestions = [], 
     initialSecondarySuggestions = [], 
     reviewStats,
-    selectedEpisodeDocId
+    selectedEpisodeDocId,
+    initialComments = {}
   } = props;
 
   const [selectedCodes, setSelectedCodes] = useState<Set<string>>(new Set());
   const [rejectedCodes, setRejectedCodes] = useState<Set<string>>(new Set());
   const [expandedCodes, setExpandedCodes] = useState<Set<string>>(new Set());
-  const [comments, setComments] = useState<Record<string, Comment[]>>({});
+  const [comments, setComments] = useState<Record<string, Comment[]>>(initialComments);
   const [activeTab, setActiveTab] = useState<'all' | 'accepted' | 'rejected' | 'newly-added'>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -52,6 +54,11 @@ export const useCodingState = (props: UseCodingStateProps = {}) => {
     setPrimarySuggestions(initialPrimarySuggestions);
     setSecondarySuggestions(initialSecondarySuggestions);
   }, [initialPrimarySuggestions, initialSecondarySuggestions]);
+
+  // Update comments when initial comments change
+  useEffect(() => {
+    setComments(initialComments);
+  }, [initialComments]);
 
   // Initialize selected/rejected codes based on API status
   useEffect(() => {
@@ -443,7 +450,7 @@ export const useCodingState = (props: UseCodingStateProps = {}) => {
       setSaveError(null);
 
       // Save the current order and status to the backend
-      await saveCodingOrder(selectedEpisodeDocId, primarySuggestions, secondarySuggestions);
+      await saveCodingOrder(selectedEpisodeDocId, primarySuggestions, secondarySuggestions, comments);
       
       setLastSaved(new Date());
       console.log('Changes saved successfully');

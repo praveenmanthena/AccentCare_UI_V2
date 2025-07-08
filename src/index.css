@@ -396,3 +396,29 @@
     transform: scale(1.03);
   }
 }
+
+/* Search highlight styles */
+.search-highlight {
+  border: 2px solid #15803d;
+  background-color: rgba(34, 197, 94, 0.2);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.search-highlight:hover {
+  background-color: rgba(34, 197, 94, 0.3);
+  border-color: #166534;
+}
+
+/* Search navigation buttons */
+.search-nav-button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-nav-button:hover {
+  transform: scale(1.1);
+}
+
+.search-nav-button:active {
+  transform: scale(0.95);
+}

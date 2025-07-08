@@ -144,16 +144,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
         {/* Summary Metrics */}
         <div className="mb-8">
-          <div className="grid grid-cols-3 gap-10">
+          <div className="grid grid-cols-3 gap-6">
             {/* Total Episodes */}
             <div
               className="bg-blue-50 border border-blue-200 rounded-lg pt-2 text-center"
-              style={{ height: "115px" }}
+              style={{ height: "135px" }}
             >
-              <div className="w-10 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-1">
-                <Activity className="w-3 h-3 text-blue-600" />
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                <Activity className="w-6 h-6 text-blue-600" />
               </div>
-              <div className="text-1xl font-bold text-blue-900 mb-1">
+              <div className="text-3xl font-bold text-blue-900 mb-1">
                 {summaryMetrics.totalEpisodes}
               </div>
               <div className="text-sm font-semibold text-blue-700">
@@ -164,12 +164,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* Completed */}
             <div
               className="bg-green-50 border border-green-200 rounded-lg pt-2 text-center"
-              style={{ height: "115px" }}
+              style={{ height: "135px" }}
             >
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-1">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
-              <div className="text-1xl font-bold text-green-900 mb-1">
+              <div className="text-3xl font-bold text-green-900 mb-1">
                 {summaryMetrics.completed}
               </div>
               <div className="text-sm font-semibold text-green-700">
@@ -180,12 +180,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* In Progress */}
             <div
               className="bg-orange-50 border border-orange-200 rounded-lg pt-2 text-center"
-              style={{ height: "115px" }}
+              style={{ height: "135px" }}
             >
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-1">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Clock className="w-6 h-6 text-orange-600" />
               </div>
-              <div className="text-1xl font-bold text-orange-900 mb-1">
+              <div className="text-3xl font-bold text-orange-900 mb-1">
                 {summaryMetrics.inProgress}
               </div>
               <div className="text-sm font-semibold text-orange-700">
@@ -239,7 +239,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
                 <span
                   className="text-sm font-medium text-gray-700"
                   style={{ fontSize: "12px" }}

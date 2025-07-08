@@ -1,4 +1,5 @@
 import { CodeSuggestion, ApiSupportingInfo, SupportingSentence, BoundingBox } from '../types';
+import { Comment } from '../types';
 import { apiClient } from './apiClient';
 
 export interface SaveCodingOrderRequest {
@@ -24,7 +25,11 @@ export interface SaveCodeData {
   updated_at?: string;
   last_reordered_by?: string;
   user_decisions?: Record<string, any>;
-  comments?: any[];
+  comments?: Array<{
+    comment: string;
+    user: string;
+    timestamp: string;
+  }>;
   deleted?: boolean;
   added_by?: string;
   created_at?: string;
@@ -57,8 +62,17 @@ const transformSupportingSentenceToApiSupportingInfo = (sentence: SupportingSent
   };
 };
 
+// Transform frontend comments to API format
+const transformCommentsToApiFormat = (comments: Comment[]): Array<{comment: string; user: string; timestamp: string}> => {
+  return comments.map(comment => ({
+    comment: comment.text,
+    user: comment.user,
+    timestamp: comment.timestamp
+  }));
+};
+
 // Transform CodeSuggestion to SaveCodeData format
-const transformCodeSuggestionToSaveData = (code: CodeSuggestion): SaveCodeData => {
+const transformCodeSuggestionToSaveData = (code: CodeSuggestion, codeComments: Comment[] = []): SaveCodeData => {
   // Determine accept_code based on status and manual addition
   let acceptCode: boolean | undefined;
   if (code.status === 'accepted' || code.isManuallyAdded) {
@@ -72,6 +86,9 @@ const transformCodeSuggestionToSaveData = (code: CodeSuggestion): SaveCodeData =
 
   // Transform supporting sentences back to API format
   const supportingInfo = code.supportingSentences.map(transformSupportingSentenceToApiSupportingInfo);
+
+  // Transform comments to API format
+  const apiComments = transformCommentsToApiFormat(codeComments);
 
   return {
     code_id: code.apiCodeId || code.id,
@@ -90,8 +107,8 @@ const transformCodeSuggestionToSaveData = (code: CodeSuggestion): SaveCodeData =
     supporting_info: supportingInfo,
     updated_at: code.updatedAt,
     last_reordered_by: code.lastReorderedBy,
-    user_decisions: undefined, // Will be managed by backend
-    comments: undefined, // Will be managed by backend
+    user_decisions: undefined,
+    comments: apiComments,
     deleted: false,
     added_by: code.isManuallyAdded ? 'coder' : undefined,
     created_at: code.addedTimestamp ? new Date(code.addedTimestamp).toISOString() : undefined
@@ -101,12 +118,17 @@ const transformCodeSuggestionToSaveData = (code: CodeSuggestion): SaveCodeData =
 export const saveCodingOrder = async (
   docId: string, 
   primaryCodes: CodeSuggestion[], 
-  secondaryCodes: CodeSuggestion[]
+  secondaryCodes: CodeSuggestion[],
+  comments: Record<string, Comment[]> = {}
 ): Promise<void> => {
   try {
     // Transform codes to API format
-    const primaryCodesData = primaryCodes.map(transformCodeSuggestionToSaveData);
-    const secondaryCodesData = secondaryCodes.map(transformCodeSuggestionToSaveData);
+    const primaryCodesData = primaryCodes.map(code => 
+      transformCodeSuggestionToSaveData(code, comments[code.id] || [])
+    );
+    const secondaryCodesData = secondaryCodes.map(code => 
+      transformCodeSuggestionToSaveData(code, comments[code.id] || [])
+    );
 
     const requestBody: SaveCodingOrderRequest = {
       primary_codes: primaryCodesData,

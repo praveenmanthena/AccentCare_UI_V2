@@ -86,6 +86,7 @@ export interface Comment {
   id: string;
   text: string;
   timestamp: string;
+  user: string;
 }
 
 export interface AuthCredentials {
@@ -155,9 +156,9 @@ export interface ApiUserDecision {
 }
 
 export interface ApiComment {
-  text: string;
-  added_by: string;
-  created_at: string;
+  comment: string;
+  user: string;
+  timestamp: string;
   comment_id: string;
 }
 
@@ -210,4 +211,29 @@ export interface AuthResponse {
 export interface LoginRequest {
   username: string;
   password: string;
+}
+
+// PDF Search interfaces
+export interface PdfSearchMatch {
+  document_name: string;
+  page_number: number;
+  bbox: number[][];
+  text_snippet: string;
+  match_score: number;
+}
+
+export interface PdfSearchApiResponse {
+  document_id: string;
+  search_string: string;
+  total_matches: number;
+  results: PdfSearchMatch[];
+}
+
+export interface SearchHighlight {
+  id: string;
+  boundingBox: BoundingBox;
+  document: string;
+  page: number;
+  textSnippet: string;
+  matchScore: number;
 }

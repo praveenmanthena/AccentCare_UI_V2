@@ -8,6 +8,7 @@ import { MedicalSuggestionsPanel } from './MedicalSuggestionsPanel';
 import { useDocumentViewer } from '../../hooks/useDocumentViewer';
 import { useCodingState } from '../../hooks/useCodingState';
 import { useICDSearch } from '../../hooks/useICDSearch';
+import { usePdfSearch } from '../../hooks/usePdfSearch';
 import { useResizablePanel } from '../../hooks/useResizablePanel';
 import { SelectedArea, CodeSuggestion as CodeSuggestionType, Document, DocumentContent, ApiReviewStats } from '../../types';
 import { MoreHorizontal } from 'lucide-react';
@@ -19,6 +20,7 @@ interface CodingInterfaceProps {
   primarySuggestions: CodeSuggestionType[];
   secondarySuggestions: CodeSuggestionType[];
   reviewStats: ApiReviewStats | null;
+  comments: Record<string, any[]>;
   onReturnToDashboard: () => void;
 }
 
@@ -29,16 +31,19 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
   primarySuggestions,
   secondarySuggestions,
   reviewStats,
+  comments,
   onReturnToDashboard
 }) => {
   const documentViewer = useDocumentViewer(documents, documentContent);
   const codingState = useCodingState({
     initialPrimarySuggestions: primarySuggestions,
     initialSecondarySuggestions: secondarySuggestions,
+    initialComments: comments,
     reviewStats,
     selectedEpisodeDocId
   });
   const icdSearch = useICDSearch();
+  const pdfSearch = usePdfSearch(selectedEpisodeDocId);
   const resizablePanel = useResizablePanel(50);
 
   // Local component state
@@ -59,6 +64,15 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
       document.removeEventListener('cancelICDAddition', handleCancelICDAddition);
     };
   }, [icdSearch]);
+
+  // Listen for search highlight changes and navigate to them
+  useEffect(() => {
+    if (pdfSearch.currentSearchHighlight) {
+      documentViewer.navigateToSearchMatch(pdfSearch.currentSearchHighlight);
+    } else {
+      documentViewer.clearSearchHighlight();
+    }
+  }, [pdfSearch.currentSearchHighlight, documentViewer]);
 
   const handleAreaSelected = (area: SelectedArea) => {
     icdSearch.setSelectedArea(area);
@@ -133,10 +147,14 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
   const submitNewComment = (codeId: string) => {
     const newCommentText = tempComments[`new-${codeId}`] || '';
     if (newCommentText.trim()) {
+      const currentUser = localStorage.getItem("username")?.split("@")[0] || "User";
+      const currentTimestamp = new Date().toISOString();
+      
       const newComment = {
         id: Date.now().toString(),
         text: newCommentText.trim(),
-        timestamp: new Date().toLocaleString()
+        timestamp: currentTimestamp,
+        user: currentUser
       };
       
       codingState.setComments(prev => ({
@@ -166,7 +184,11 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
         ...prev,
         [codeId]: (prev[codeId] || []).map(comment => 
           comment.id === commentId 
-            ? { ...comment, text: editedText.trim() }
+            ? { 
+                ...comment, 
+                text: editedText.trim(),
+                timestamp: new Date().toISOString() // Update timestamp when edited
+              }
             : comment
         )
       }));
@@ -281,6 +303,24 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
             onPageInputChange={documentViewer.handlePageInputChange}
             onPageInputKeyPress={documentViewer.handlePageInputKeyPress}
             onPageInputBlur={documentViewer.handlePageInputBlur}
+            // PDF Search props
+            searchTerm={pdfSearch.searchTerm}
+            onSearchTermChange={(term) => {
+              console.log('CodingInterface: Search term change:', term); // Debug log
+              pdfSearch.setSearchTerm(term);
+            }}
+            onSearchSubmit={() => pdfSearch.performPdfSearch(pdfSearch.searchTerm)}
+            searchResults={pdfSearch.searchResults}
+            currentMatchIndex={pdfSearch.currentMatchIndex}
+            totalMatches={pdfSearch.totalMatches}
+            isSearching={pdfSearch.isSearching}
+            searchError={pdfSearch.searchError}
+            hasSearchResults={pdfSearch.hasResults}
+            hasMultipleResults={pdfSearch.hasMultipleResults}
+            isCurrentTermSearched={pdfSearch.isCurrentTermSearched}
+            onNextMatch={pdfSearch.goToNextMatch}
+            onPrevMatch={pdfSearch.goToPrevMatch}
+            onClearSearch={pdfSearch.clearSearch}
           />
 
           {/* PDF Content */}
@@ -290,6 +330,7 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
             zoomLevel={documentViewer.zoomLevel}
             highlightedEvidence={documentViewer.highlightedEvidence}
             showHighlight={documentViewer.showHighlight}
+            searchHighlight={documentViewer.searchHighlight}
             isAddingICD={icdSearch.isAddingICD}
             isTransitioning={documentViewer.isTransitioning}
             onAreaSelected={handleAreaSelected}

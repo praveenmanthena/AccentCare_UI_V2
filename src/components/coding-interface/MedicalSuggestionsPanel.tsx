@@ -290,7 +290,7 @@ export const MedicalSuggestionsPanel: React.FC<
 
                   <div className="space-y-3 text-sm">
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6  rounded-full flex items-center justify-center">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center">
                         <GripVertical className="w-5 h-5" />
                       </div>
                       <div>
@@ -305,7 +305,7 @@ export const MedicalSuggestionsPanel: React.FC<
                     </div>
 
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6  rounded-full flex items-center justify-center">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -392,7 +392,7 @@ export const MedicalSuggestionsPanel: React.FC<
             <div className="flex items-center gap-3">
               <span className="text-xs text-gray-500">
                 {codingState.completedDecisions} of{" "}
-                {codingState.aiSuggestionsCount} recommendations completed
+                {codingState.aiSuggestionsCount} AI recommendations completed
               </span>
               {codingState.lastSaved && (
                 <span className="text-xs text-green-600 font-medium">
