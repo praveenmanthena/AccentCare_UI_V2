@@ -59,7 +59,11 @@ export const BrandedHeader: React.FC<BrandedHeaderProps> = ({
               <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                 <User className="w-4 h-4 text-white" />
               </div>
-              <span className="text-sm font-medium text-gray-700">admin</span>
+              <span className="text-sm font-medium text-gray-700">
+                <span style={{ textTransform: "capitalize" }}>
+                  {localStorage.getItem("username")?.split("@")[0]}
+                </span>
+              </span>
               <ChevronDown
                 className={`w-4 h-4 text-gray-500 transition-transform ${
                   showUserMenu ? "rotate-180" : ""
@@ -77,11 +81,8 @@ export const BrandedHeader: React.FC<BrandedHeaderProps> = ({
                       <User className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-800">
-                        Administrator
-                      </div>
                       <div className="text-sm text-gray-600">
-                        admin@penguinai.co
+                        {localStorage.getItem("username")}
                       </div>
                       <div className="text-xs text-gray-500 mt-1">
                         Medical Coding Specialist

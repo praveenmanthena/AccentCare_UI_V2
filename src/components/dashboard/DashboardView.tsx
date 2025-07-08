@@ -146,7 +146,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="mb-8">
           <div className="grid grid-cols-3 gap-6">
             {/* Total Episodes */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+            <div
+              className="bg-blue-50 border border-blue-200 rounded-lg pt-2 text-center"
+              style={{ height: "135px" }}
+            >
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Activity className="w-6 h-6 text-blue-600" />
               </div>
@@ -159,7 +162,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* Completed */}
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+            <div
+              className="bg-green-50 border border-green-200 rounded-lg pt-2 text-center"
+              style={{ height: "135px" }}
+            >
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
@@ -172,7 +178,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* In Progress */}
-            <div className="bg-orange-50 border border-orange-200 rounded-lg p-6 text-center">
+            <div
+              className="bg-orange-50 border border-orange-200 rounded-lg pt-2 text-center"
+              style={{ height: "135px" }}
+            >
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Clock className="w-6 h-6 text-orange-600" />
               </div>
@@ -198,35 +207,45 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
         </div>
-        <div className="mb-4 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg mt-2">
-          <div className="flex justify-end">
-            {/* Right side: Status Legend */}
-            <div className="flex items-center gap-4 ">
+        <div className="flex justify-end">
+          {/* Right side: Status Legend */}
+          <div className="flex items-center gap-4 ">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-indigo-500 rounded-full"></div>
+              <span
+                className="text-sm font-medium text-gray-700"
+                style={{ fontSize: "12px" }}
+              >
+                AI recommendations
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-indigo-500 rounded-full"></div>
-                <span className="text-sm font-medium text-gray-700">
-                  AI recommendations
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span
+                  className="text-sm font-medium text-gray-700"
+                  style={{ fontSize: "12px" }}
+                >
+                  Accepted
                 </span>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-sm font-medium text-gray-700">
-                    Accepted
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <span className="text-sm font-medium text-gray-700">
-                    Rejected
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                  <span className="text-sm font-medium text-gray-700">
-                    Newly Added
-                  </span>
-                </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <span
+                  className="text-sm font-medium text-gray-700"
+                  style={{ fontSize: "12px" }}
+                >
+                  Rejected
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                <span
+                  className="text-sm font-medium text-gray-700"
+                  style={{ fontSize: "12px" }}
+                >
+                  Newly Added
+                </span>
               </div>
             </div>
           </div>
@@ -252,7 +271,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       Created Date
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
-                      Status
+                      Code Review Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
                       Coding Summary

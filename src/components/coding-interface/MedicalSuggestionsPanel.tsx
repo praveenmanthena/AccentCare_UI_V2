@@ -407,14 +407,17 @@ export const MedicalSuggestionsPanel: React.FC<
         <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
           <button
             onClick={() => codingState.setActiveTab("all")}
-            className={`flex-1 px-3 py-2 text-sm font-bold rounded-md transition-colors ${
+            className={` flex-1 px-3 py-2 text-sm font-bold rounded-md transition-colors ${
               codingState.activeTab === "all"
                 ? "bg-white text-gray-900 shadow-sm"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            ICD List
-            <span className="ml-1 px-2 py-0.5 bg-gray-200 text-gray-700 rounded-full text-xs font-bold">
+            Total ICD List
+            <span
+              className="ml-1 px-2 py-0.5 bg-indigo-500 text-white-700 rounded-full text-xs font-bold"
+              style={{ color: "#fff" }}
+            >
               {codingState.primarySuggestions.filter(
                 (code: any) => !codingState.rejectedCodes.has(code.id)
               ).length +
@@ -432,7 +435,10 @@ export const MedicalSuggestionsPanel: React.FC<
             }`}
           >
             Accepted
-            <span className="ml-1 px-2 py-0.5 bg-green-200 text-green-700 rounded-full text-xs font-bold">
+            <span
+              className="ml-1 px-2 py-0.5 bg-green-500 text-green-700 rounded-full text-xs font-bold"
+              style={{ color: "#fff" }}
+            >
               {codingState.acceptedCount}
             </span>
           </button>
@@ -445,7 +451,10 @@ export const MedicalSuggestionsPanel: React.FC<
             }`}
           >
             Rejected
-            <span className="ml-1 px-2 py-0.5 bg-red-200 text-red-700 rounded-full text-xs font-bold">
+            <span
+              className="ml-1 px-2 py-0.5 bg-red-500 text-red-700 rounded-full text-xs font-bold"
+              style={{ color: "#fff" }}
+            >
               {codingState.rejectedCount}
             </span>
           </button>
@@ -458,7 +467,10 @@ export const MedicalSuggestionsPanel: React.FC<
             }`}
           >
             Newly Added
-            <span className="ml-1 px-2 py-0.5 bg-blue-200 text-blue-700 rounded-full text-xs font-bold">
+            <span
+              className="ml-1 px-2 py-0.5 bg-purple-500 text-blue-700 rounded-full text-xs font-bold"
+              style={{ color: "#fff" }}
+            >
               {codingState.newlyAddedCount}
             </span>
           </button>
@@ -466,45 +478,7 @@ export const MedicalSuggestionsPanel: React.FC<
       </div>
 
       {/* Legend Section */}
-      <div className="mb-4 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg mt-2">
-        <div className="flex items-center justify-between">
-          {/* Right side: Status Legend */}
-          <div className="flex items-center gap-4 ">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-indigo-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700">
-                {codingState.primarySuggestions.filter(
-                  (code: any) => !codingState.rejectedCodes.has(code.id)
-                ).length +
-                  codingState.secondarySuggestions.filter(
-                    (code: any) => !codingState.rejectedCodes.has(code.id)
-                  ).length}{" "}
-                AI recommendations
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-sm font-medium text-gray-700">
-                  {codingState.acceptedCount} Accepted
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="text-sm font-medium text-gray-700">
-                  {codingState.rejectedCount} Rejected
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                <span className="text-sm font-medium text-gray-700">
-                  {codingState.newlyAddedCount} Newly Added
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
       {/* Content Area */}
       <div className="flex-1 overflow-auto p-4">
         {/* Render suggestions based on active tab */}
