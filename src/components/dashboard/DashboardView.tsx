@@ -211,7 +211,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Right side: Status Legend */}
           <div className="flex items-center gap-4 ">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-indigo-500 rounded-full"></div>
+              <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
               <span
                 className="text-sm font-medium text-gray-700"
                 style={{ fontSize: "12px" }}
@@ -221,7 +221,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span
                   className="text-sm font-medium text-gray-700"
                   style={{ fontSize: "12px" }}
@@ -230,7 +230,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                 <span
                   className="text-sm font-medium text-gray-700"
                   style={{ fontSize: "12px" }}
@@ -239,7 +239,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                 <span
                   className="text-sm font-medium text-gray-700"
                   style={{ fontSize: "12px" }}
