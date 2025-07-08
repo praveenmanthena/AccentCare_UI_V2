@@ -1,7 +1,7 @@
-import { FileText } from "lucide-react";
 import React from "react";
+import PenguinLogo from "../../images/penguin-logo.svg";
+import Penguin from "../../images/Penguinai-name.png";
 import { AuthCredentials } from "../../types";
-
 interface LoginPageProps {
   credentials: AuthCredentials;
   setCredentials: (credentials: AuthCredentials) => void;
@@ -21,6 +21,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     if (e) e.preventDefault();
 
     const success = await onLogin(credentials.username, credentials.password);
+    if (success) {
+      localStorage.setItem("username", credentials.username);
+    }
     if (!success && !loginError) {
       // Only show generic error if no specific error is already shown
       console.error("Login failed without specific error message");
@@ -32,8 +35,28 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       <div className="max-w-md w-full">
         {/* Logo/Header */}
         <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
-            <FileText className="w-8 h-8 text-white" />
+          <div className="mx-auto w-30 h-16  rounded-full flex items-center justify-center mb-4">
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                style={{ width: "25px", marginBottom: "5px" }}
+                src={PenguinLogo}
+              ></img>
+              <img
+                style={{
+                  width: "150px",
+                  height: "100%",
+                  marginTop: "10px",
+                  marginLeft: "10px",
+                }}
+                src={Penguin}
+              ></img>
+            </div>
           </div>
           <h1 className="text-3xl font-bold text-gray-900">
             Medical Coding Platform
@@ -113,9 +136,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-gray-500">
-          <p className="font-medium">
-            © 2025 Home Health Coding Platform. All rights reserved.
-          </p>
+          <p className="font-medium">© 2025 Penguin AI. All rights reserved.</p>
         </div>
       </div>
     </div>
