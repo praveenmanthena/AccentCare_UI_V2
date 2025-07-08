@@ -17,7 +17,7 @@ import {
   AlertTriangle,
   ArrowDown,
   CheckCircle,
-  ChevronDown,
+  GripVertical,
   Info,
   MessageSquare,
   Plus,
@@ -290,8 +290,8 @@ export const MedicalSuggestionsPanel: React.FC<
 
                   <div className="space-y-3 text-sm">
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                        <ChevronDown className="w-3 h-3 text-green-600" />
+                      <div className="flex-shrink-0 w-6 h-6  rounded-full flex items-center justify-center">
+                        <GripVertical className="w-5 h-5" />
                       </div>
                       <div>
                         <p className="font-semibold text-gray-800 mb-1">
@@ -305,8 +305,35 @@ export const MedicalSuggestionsPanel: React.FC<
                     </div>
 
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
-                        <Star className="w-3 h-3 text-purple-600" />
+                      <div className="flex-shrink-0 w-6 h-6  rounded-full flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                          />
+                        </svg>
+
+                        {/* Upward arrow */}
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 10l7-7m0 0l7 7m-7-7v18"
+                          />
+                        </svg>
                       </div>
                       <div>
                         <p className="font-semibold text-gray-800 mb-1">
@@ -486,7 +513,10 @@ export const MedicalSuggestionsPanel: React.FC<
         codingState.searchTerm.length < 2 ? (
           <>
             {/* Primary Suggestions - Green Background Section */}
-            <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+            <div
+              className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4"
+              style={{ paddingTop: "12px" }}
+            >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <Star className="w-5 h-5 text-green-600" />
