@@ -12,8 +12,10 @@ import {
   User,
 } from "lucide-react";
 import React from "react";
+import PenguinLogo from "../../../public/images/penguin-logo.svg";
 import { useDashboardApi } from "../../hooks/useDashboardApi";
 
+import Penguin from "../../../public/images/Penguinai-name.png";
 interface DashboardViewProps {
   onStartCoding: (docId: string) => void;
   onLogout: () => void;
@@ -56,16 +58,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Left side - Logo and Branding */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <img
-                src="/src/images/penguin-logo.svg"
-                alt="PenguinAI Logo"
-                className="w-8 h-8"
-              />
-              <img
-                src="/src/images/Penguinai-name.png"
-                alt="PenguinAI"
-                className="h-6"
-              />
+              <img src={PenguinLogo} alt="PenguinAI Logo" className="w-8 h-8" />
+              <img src={Penguin} alt="PenguinAI" className="h-6" />
             </div>
           </div>
 

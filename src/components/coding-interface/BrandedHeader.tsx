@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { LogOut, User, ChevronDown, LayoutDashboard } from 'lucide-react';
+import { ChevronDown, LayoutDashboard, LogOut, User } from "lucide-react";
+import React, { useState } from "react";
+import PenguinLogo from "../../../public/images/penguin-logo.svg";
 
+import Penguin from "../../../public/images/Penguinai-name.png";
 interface BrandedHeaderProps {
   selectedEpisodeDocId: string;
   onReturnToDashboard: () => void;
@@ -10,7 +12,7 @@ interface BrandedHeaderProps {
 export const BrandedHeader: React.FC<BrandedHeaderProps> = ({
   selectedEpisodeDocId,
   onReturnToDashboard,
-  onLogout
+  onLogout,
 }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -25,16 +27,8 @@ export const BrandedHeader: React.FC<BrandedHeaderProps> = ({
         {/* Left side - Logo, Company Name, and Episode ID */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
-            <img 
-              src="/src/images/penguin-logo.svg" 
-              alt="PenguinAI Logo" 
-              className="w-8 h-8"
-            />
-            <img 
-              src="/src/images/Penguinai-name.png" 
-              alt="PenguinAI" 
-              className="h-6"
-            />
+            <img src={PenguinLogo} alt="PenguinAI Logo" className="w-8 h-8" />
+            <img src={Penguin} alt="PenguinAI" className="h-6" />
           </div>
 
           {/* Episode Info - Moved next to logo */}
@@ -66,7 +60,11 @@ export const BrandedHeader: React.FC<BrandedHeaderProps> = ({
                 <User className="w-4 h-4 text-white" />
               </div>
               <span className="text-sm font-medium text-gray-700">admin</span>
-              <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                className={`w-4 h-4 text-gray-500 transition-transform ${
+                  showUserMenu ? "rotate-180" : ""
+                }`}
+              />
             </button>
 
             {/* User Dropdown Menu */}
@@ -79,9 +77,15 @@ export const BrandedHeader: React.FC<BrandedHeaderProps> = ({
                       <User className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-800">Administrator</div>
-                      <div className="text-sm text-gray-600">admin@penguinai.co</div>
-                      <div className="text-xs text-gray-500 mt-1">Medical Coding Specialist</div>
+                      <div className="font-semibold text-gray-800">
+                        Administrator
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        admin@penguinai.co
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        Medical Coding Specialist
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -96,8 +100,12 @@ export const BrandedHeader: React.FC<BrandedHeaderProps> = ({
                       <LogOut className="w-4 h-4 text-red-600" />
                     </div>
                     <div>
-                      <div className="font-medium text-gray-800 group-hover:text-red-800">Sign Out</div>
-                      <div className="text-xs text-gray-500">End current session</div>
+                      <div className="font-medium text-gray-800 group-hover:text-red-800">
+                        Sign Out
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        End current session
+                      </div>
                     </div>
                   </button>
                 </div>
@@ -113,8 +121,8 @@ export const BrandedHeader: React.FC<BrandedHeaderProps> = ({
 
             {/* Overlay to close dropdown when clicking outside */}
             {showUserMenu && (
-              <div 
-                className="fixed inset-0 z-40" 
+              <div
+                className="fixed inset-0 z-40"
                 onClick={() => setShowUserMenu(false)}
               />
             )}

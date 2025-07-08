@@ -16,6 +16,7 @@ import {
 import {
   AlertTriangle,
   ArrowDown,
+  Calculator,
   CheckCircle,
   ChevronDown,
   Info,
@@ -335,7 +336,7 @@ export const MedicalSuggestionsPanel: React.FC<
           {/* HIPPS Details and Save Button */}
           <div className="flex items-center gap-3">
             {/* HIPPS Details Button */}
-            {/* <button
+            <button
               onClick={() => setShowHippsModal(true)}
               className="bg-blue-50 border border-blue-200 rounded-lg p-3 hover:bg-blue-100 transition-colors"
             >
@@ -351,7 +352,7 @@ export const MedicalSuggestionsPanel: React.FC<
                   </div>
                 </div>
               </div>
-            </button> */}
+            </button>
 
             {/* Save Button - Always Enabled */}
             <button
@@ -482,6 +483,40 @@ export const MedicalSuggestionsPanel: React.FC<
         </div>
       </div>
 
+      {/* Legend Section */}
+      <div className="mb-4 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg mt-2">
+        <div className="flex items-center justify-between">
+          {/* Right side: Status Legend */}
+          <div className="flex items-center gap-4 ">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+              <span className="text-sm font-medium text-gray-700">
+                {codingState.primarySuggestions.filter(
+                  (code: any) => !codingState.rejectedCodes.has(code.id)
+                ).length +
+                  codingState.secondarySuggestions.filter(
+                    (code: any) => !codingState.rejectedCodes.has(code.id)
+                  ).length}{" "}
+                AI recommendations
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span className="text-sm font-medium text-gray-700">
+                  {codingState.acceptedCount} Accepted
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <span className="text-sm font-medium text-gray-700">
+                  {codingState.rejectedCount} Rejected
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* Content Area */}
       <div className="flex-1 overflow-auto p-4">
         {/* Render suggestions based on active tab */}

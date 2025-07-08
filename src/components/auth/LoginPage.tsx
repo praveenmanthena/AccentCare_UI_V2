@@ -1,6 +1,7 @@
 import React from "react";
-import PenguinLogo from "../../images/penguin-logo.svg";
-import Penguin from "../../images/Penguinai-name.png";
+import PenguinLogo from "../../../public/images/penguin-logo.svg";
+
+import Penguin from "../../../public/images/Penguinai-name.png";
 import { AuthCredentials } from "../../types";
 interface LoginPageProps {
   credentials: AuthCredentials;
