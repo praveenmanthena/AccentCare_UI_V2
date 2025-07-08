@@ -16,7 +16,6 @@ import {
 import {
   AlertTriangle,
   ArrowDown,
-  Calculator,
   CheckCircle,
   ChevronDown,
   Info,
@@ -336,23 +335,6 @@ export const MedicalSuggestionsPanel: React.FC<
           {/* HIPPS Details and Save Button */}
           <div className="flex items-center gap-3">
             {/* HIPPS Details Button */}
-            <button
-              onClick={() => setShowHippsModal(true)}
-              className="bg-blue-50 border border-blue-200 rounded-lg p-3 hover:bg-blue-100 transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <Calculator className="w-4 h-4 text-blue-600" />
-                <div className="text-left">
-                  <div className="text-sm font-bold text-blue-800">
-                    HIPPS Details
-                  </div>
-                  <div className="text-xs text-blue-600">
-                    {codingState.hippsScore} • $
-                    {codingState.finalPayment.toLocaleString()}
-                  </div>
-                </div>
-              </div>
-            </button>
 
             {/* Save Button - Always Enabled */}
             <button
@@ -489,7 +471,7 @@ export const MedicalSuggestionsPanel: React.FC<
           {/* Right side: Status Legend */}
           <div className="flex items-center gap-4 ">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-indigo-500 rounded-full"></div>
               <span className="text-sm font-medium text-gray-700">
                 {codingState.primarySuggestions.filter(
                   (code: any) => !codingState.rejectedCodes.has(code.id)
@@ -511,6 +493,12 @@ export const MedicalSuggestionsPanel: React.FC<
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <span className="text-sm font-medium text-gray-700">
                   {codingState.rejectedCount} Rejected
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                <span className="text-sm font-medium text-gray-700">
+                  {codingState.newlyAddedCount} Newly Added
                 </span>
               </div>
             </div>

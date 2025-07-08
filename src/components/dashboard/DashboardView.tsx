@@ -198,6 +198,39 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
         </div>
+        <div className="mb-4 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg mt-2">
+          <div className="flex justify-end">
+            {/* Right side: Status Legend */}
+            <div className="flex items-center gap-4 ">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-indigo-500 rounded-full"></div>
+                <span className="text-sm font-medium text-gray-700">
+                  AI recommendations
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-sm font-medium text-gray-700">
+                    Accepted
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span className="text-sm font-medium text-gray-700">
+                    Rejected
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                  <span className="text-sm font-medium text-gray-700">
+                    Newly Added
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Recent Episodes Table */}
         <div className="mb-6">
@@ -279,32 +312,43 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             )}
                           </div>
                         </td>
+
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-1">
-                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                              <span className="text-sm font-bold text-blue-600">
+                          <div className="flex items-center gap-4">
+                            {/* Remaining Count */}
+                            <div className="flex items-center gap-1 min-w-[30px]">
+                              <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                              <span className="text-sm font-bold text-indigo-600">
+                                {episode.remaining_count}
+                              </span>
+                            </div>
+
+                            {/* Accepted Count */}
+                            <div className="flex items-center gap-1 min-w-[30px]">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              <span className="text-sm font-bold text-green-600">
                                 {episode.accept_count}
                               </span>
                             </div>
-                            {episode.remaining_count > 0 && (
-                              <div className="flex items-center gap-1">
-                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                <span className="text-sm font-bold text-green-600">
-                                  {episode.remaining_count}
-                                </span>
-                              </div>
-                            )}
-                            {episode.reject_count > 0 && (
-                              <div className="flex items-center gap-1">
-                                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                                <span className="text-sm font-bold text-red-600">
-                                  {episode.reject_count}
-                                </span>
-                              </div>
-                            )}
+
+                            {/* Rejected Count */}
+                            <div className="flex items-center gap-1 min-w-[30px]">
+                              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                              <span className="text-sm font-bold text-red-600">
+                                {episode?.reject_count}
+                              </span>
+                            </div>
+
+                            {/* Newly Added Count */}
+                            <div className="flex items-center gap-1 min-w-[30px]">
+                              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                              <span className="text-sm font-bold text-purple-600">
+                                {episode?.newly_added_count}
+                              </span>
+                            </div>
                           </div>
                         </td>
+
                         {/* Hidden Revenue Rate Column */}
                         <td className="px-6 py-4 whitespace-nowrap hidden">
                           <div className="text-sm font-bold text-gray-900">

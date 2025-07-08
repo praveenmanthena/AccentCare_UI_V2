@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { LoginPage } from './components/auth/LoginPage';
-import { DashboardView } from './components/dashboard/DashboardView';
-import { CodingInterface } from './components/coding-interface/CodingInterface';
-import { useAuth } from './hooks/useAuth';
-import { useDocumentApi } from './hooks/useDocumentApi';
-import { useCodingResultsApi } from './hooks/useCodingResultsApi';
-import { RefreshCw, AlertCircle } from 'lucide-react';
+import { AlertCircle, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { LoginPage } from "./components/auth/LoginPage";
+import { CodingInterface } from "./components/coding-interface/CodingInterface";
+import { DashboardView } from "./components/dashboard/DashboardView";
+import { useAuth } from "./hooks/useAuth";
+import { useCodingResultsApi } from "./hooks/useCodingResultsApi";
+import { useDocumentApi } from "./hooks/useDocumentApi";
 
 const HomeHealthCodingInterface = () => {
   // Core state management hooks
@@ -13,11 +13,24 @@ const HomeHealthCodingInterface = () => {
 
   // Local component state
   const [showDashboard, setShowDashboard] = useState(true); // Start with dashboard after login
-  const [selectedEpisodeDocId, setSelectedEpisodeDocId] = useState<string | null>(null);
+  const [selectedEpisodeDocId, setSelectedEpisodeDocId] = useState<
+    string | null
+  >(null);
 
   // API hooks
-  const { documents, documentContent, loading: documentsLoading, error: documentsError } = useDocumentApi(selectedEpisodeDocId);
-  const { primarySuggestions, secondarySuggestions, reviewStats, loading: codingLoading, error: codingError } = useCodingResultsApi(selectedEpisodeDocId);
+  const {
+    documents,
+    documentContent,
+    loading: documentsLoading,
+    error: documentsError,
+  } = useDocumentApi(selectedEpisodeDocId);
+  const {
+    primarySuggestions,
+    secondarySuggestions,
+    reviewStats,
+    loading: codingLoading,
+    error: codingError,
+  } = useCodingResultsApi(selectedEpisodeDocId);
 
   // Event handlers
   const startCoding = (docId: string) => {
@@ -51,10 +64,7 @@ const HomeHealthCodingInterface = () => {
 
   if (showDashboard) {
     return (
-      <DashboardView
-        onStartCoding={startCoding}
-        onLogout={handleLogout}
-      />
+      <DashboardView onStartCoding={startCoding} onLogout={handleLogout} />
     );
   }
 
@@ -65,7 +75,9 @@ const HomeHealthCodingInterface = () => {
         <div className="text-center">
           <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
           <p className="text-lg font-semibold text-gray-700">
-            {documentsLoading ? 'Loading documents...' : 'Loading coding results...'}
+            {documentsLoading
+              ? "Loading documents..."
+              : "Loading coding results..."}
           </p>
         </div>
       </div>
@@ -78,10 +90,10 @@ const HomeHealthCodingInterface = () => {
       <div className="flex h-screen bg-gray-50 font-sans items-center justify-center">
         <div className="text-center max-w-md">
           <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-600" />
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Failed to Load Data</h2>
-          <p className="text-gray-600 mb-4">
-            {documentsError || codingError}
-          </p>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">
+            Failed to Load Data
+          </h2>
+          <p className="text-gray-600 mb-4">{documentsError || codingError}</p>
           <div className="flex gap-3 justify-center">
             <button
               onClick={returnToDashboard}
