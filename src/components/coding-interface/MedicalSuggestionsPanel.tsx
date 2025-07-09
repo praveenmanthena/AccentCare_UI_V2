@@ -492,7 +492,7 @@ export const MedicalSuggestionsPanel: React.FC<
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            Newly Added7
+            Newly Added
             <span
               className="ml-1 px-2 py-0.5 bg-purple-500 text-blue-700 rounded-full text-xs font-bold"
               style={{ color: "#fff" }}
