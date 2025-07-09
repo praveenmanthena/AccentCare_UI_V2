@@ -398,7 +398,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                               </>
                             ) : (
                               <>
-                                <Clock className="w-4 h-4 text-yellow-600" />
+                                <Clock
+                                  className="w-4 h-4 text-yellow-600"
+                                  style={{ color: "#000" }}
+                                />
                                 <span
                                   className="inline-flex px-2 py-1 text-xs font-bold rounded-full bg-yellow-100 text-black-800"
                                   style={{ background: "#ffff00" }}
