@@ -45,7 +45,8 @@ const HomeHealthCodingInterface = () => {
   };
 
   const handleLogout = () => {
-    auth.logout();
+    // Properly logout: clear token, reset state, and redirect to login
+    auth.logout(); // This clears the token and sets isLoggedIn to false
     setShowDashboard(true);
     setSelectedEpisodeDocId(null);
   };
@@ -119,6 +120,7 @@ const HomeHealthCodingInterface = () => {
       reviewStats={reviewStats}
       comments={comments}
       onReturnToDashboard={returnToDashboard}
+      onLogout={handleLogout}
     />
   );
 };

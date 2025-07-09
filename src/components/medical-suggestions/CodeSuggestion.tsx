@@ -261,7 +261,7 @@ export const CodeSuggestion: React.FC<CodeSuggestionProps> = ({
         </div>
       </div>
 
-      {/* Expanded Content */}
+      {/* Expanded Content - Show in all views */}
       {isExpanded && (
         <div className="mt-3 pt-3 border-t border-gray-200 space-y-4">
           {/* Description */}
@@ -271,55 +271,59 @@ export const CodeSuggestion: React.FC<CodeSuggestionProps> = ({
             </p>
           </div>
 
-          {/* AI Reasoning */}
-          <div>
-            <h4 className="font-bold text-gray-800 mb-2 text-sm">
-              AI Reasoning
-            </h4>
-            <p className="text-sm text-gray-700 bg-blue-50 p-3 rounded border-l-4 border-blue-200 font-medium">
-              {suggestion.aiReasoning}
-            </p>
-          </div>
+          {/* AI Reasoning - Only show for non-manually added codes */}
+          {!suggestion.isManuallyAdded && (
+            <div>
+              <h4 className="font-bold text-gray-800 mb-2 text-sm">
+                AI Reasoning
+              </h4>
+              <p className="text-sm text-gray-700 bg-blue-50 p-3 rounded border-l-4 border-blue-200 font-medium">
+                {suggestion.aiReasoning}
+              </p>
+            </div>
+          )}
 
-          {/* Supporting Evidence */}
-          <div>
-            <h4 className="font-bold text-gray-800 mb-2 text-sm">
-              Supporting Evidence
-            </h4>
-            <ul className="space-y-2">
-              {suggestion.supportingSentences.map((evidence, idx) => (
-                <li
-                  key={idx}
-                  className="text-sm text-gray-700 bg-gray-50 p-2 rounded"
-                >
-                  <div className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <div className="flex-1">
-                      <p className="mb-1 font-medium">{evidence.text}</p>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <span className="font-semibold">
-                          {evidence.document}
-                        </span>
-                        <span>•</span>
-                        <span className="font-medium">
-                          Page {evidence.page}
-                        </span>
-                        <button
-                          onClick={() => onNavigateToEvidence(evidence)}
-                          className="ml-2 text-blue-600 hover:text-blue-700 flex items-center gap-1 font-semibold transition-all duration-200 interactive-button"
-                        >
-                          <ExternalLink className="w-3 h-3" />
-                          View
-                        </button>
+          {/* Supporting Evidence - Only show for non-manually added codes */}
+          {!suggestion.isManuallyAdded && (
+            <div>
+              <h4 className="font-bold text-gray-800 mb-2 text-sm">
+                Supporting Evidence
+              </h4>
+              <ul className="space-y-2">
+                {suggestion.supportingSentences.map((evidence, idx) => (
+                  <li
+                    key={idx}
+                    className="text-sm text-gray-700 bg-gray-50 p-2 rounded"
+                  >
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="flex-1">
+                        <p className="mb-1 font-medium">{evidence.text}</p>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <span className="font-semibold">
+                            {evidence.document}
+                          </span>
+                          <span>•</span>
+                          <span className="font-medium">
+                            Page {evidence.page}
+                          </span>
+                          <button
+                            onClick={() => onNavigateToEvidence(evidence)}
+                            className="ml-2 text-blue-600 hover:text-blue-700 flex items-center gap-1 font-semibold transition-all duration-200 interactive-button"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            View
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-          {/* Comments Section */}
+          {/* Comments Section - Show in ALL views */}
           <div>
             <h4 className="font-bold text-gray-800 mb-2 flex items-center gap-2 text-sm">
               <MessageSquare className="w-4 h-4" />
@@ -345,9 +349,13 @@ export const CodeSuggestion: React.FC<CodeSuggestionProps> = ({
                           </p>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
-                              <span className="font-semibold text-blue-600">{comment.user}</span>
+                              <span className="font-semibold text-blue-600 italic">
+                                {comment.user}
+                              </span>
                               <span>•</span>
-                              <span>{new Date(comment.timestamp).toLocaleString()}</span>
+                              <span>
+                                {new Date(comment.timestamp).toLocaleString()}
+                              </span>
                             </div>
                             <button
                               onClick={() =>

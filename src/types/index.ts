@@ -3,7 +3,7 @@ export interface Patient {
   patientName: string;
   medicare: string;
   admissionDate: string;
-  priority: 'High' | 'Medium' | 'Low';
+  priority: "High" | "Medium" | "Low";
   documentsReady: boolean;
 }
 
@@ -63,7 +63,7 @@ export interface CodeSuggestion {
   description: string;
   confidence: number;
   hippsPoints: number;
-  status: 'pending' | 'accepted' | 'rejected';
+  status: "pending" | "accepted" | "rejected";
   isHippsContributor: boolean;
   isManuallyAdded?: boolean;
   aiReasoning: string;
@@ -95,7 +95,7 @@ export interface AuthCredentials {
 }
 
 // Document status types for the new dashboard
-export type DocStatusType = 'Complete' | 'Incomplete' | 'Inconsistent';
+export type DocStatusType = "Complete" | "Incomplete" | "Inconsistent";
 
 export interface SelectionCoords {
   x: number;
@@ -153,13 +153,13 @@ export interface ApiSupportingInfo {
 }
 
 export interface ApiUserDecision {
-  status: 'accept' | 'reject';
+  status: "accept" | "reject";
   decided_at: string;
 }
 
 export interface ApiComment {
   comment: string;
-  user: string;
+  user_id: string;
   timestamp: string;
   comment_id: string;
 }
@@ -177,7 +177,7 @@ export interface ApiCodeSuggestion {
   supporting_sentence_for_active_disease: string;
   active_management_asof_1june2025: boolean;
   supporting_sentence_for_active_management: string;
-  code_type: 'AI_MODEL' | 'HUMAN';
+  code_type: "AI_MODEL" | "HUMAN";
   accept_code?: boolean;
   updated_at: string;
   last_reordered_by: string;
@@ -192,7 +192,7 @@ export interface ApiReviewStats {
   accept_count: number;
   reject_count: number;
   remaining_count: number;
-  review_status: 'IN PROGRESS' | 'COMPLETED' | 'YET TO REVIEW';
+  review_status: "IN PROGRESS" | "COMPLETED" | "YET TO REVIEW";
 }
 
 export interface CodingResultsApiResponse {

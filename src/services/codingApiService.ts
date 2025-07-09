@@ -1,6 +1,11 @@
-import { CodeSuggestion, ApiSupportingInfo, SupportingSentence, BoundingBox } from '../types';
-import { Comment } from '../types';
-import { apiClient } from './apiClient';
+import {
+  ApiSupportingInfo,
+  BoundingBox,
+  CodeSuggestion,
+  Comment,
+  SupportingSentence,
+} from "../types";
+import { apiClient } from "./apiClient";
 
 export interface SaveCodingOrderRequest {
   primary_codes: SaveCodeData[];
@@ -13,7 +18,7 @@ export interface SaveCodeData {
   disease_description: string;
   rank: number;
   accept_code?: boolean; // Optional to allow undefined for pending decisions
-  code_type: 'AI_MODEL' | 'HUMAN';
+  code_type: "AI_MODEL" | "HUMAN";
   considered_but_excluded: boolean;
   reason_for_exclusion: string;
   reason_for_coding: string;
@@ -27,7 +32,7 @@ export interface SaveCodeData {
   user_decisions?: Record<string, any>;
   comments?: Array<{
     comment: string;
-    user: string;
+    user_id: string;
     timestamp: string;
   }>;
   deleted?: boolean;
@@ -39,45 +44,56 @@ export interface SaveCodeData {
 const convertBoundingBoxToBbox = (boundingBox: BoundingBox): number[][] => {
   // Convert normalized coordinates back to 8-element array format
   // bbox format: [[min_x, min_y, max_x, min_y, max_x, max_y, min_x, max_y]]
-  return [[
-    boundingBox.x_min,
-    boundingBox.y_min,
-    boundingBox.x_max,
-    boundingBox.y_min,
-    boundingBox.x_max,
-    boundingBox.y_max,
-    boundingBox.x_min,
-    boundingBox.y_max
-  ]];
+  return [
+    [
+      boundingBox.x_min,
+      boundingBox.y_min,
+      boundingBox.x_max,
+      boundingBox.y_min,
+      boundingBox.x_max,
+      boundingBox.y_max,
+      boundingBox.x_min,
+      boundingBox.y_max,
+    ],
+  ];
 };
 
 // Helper function to transform SupportingSentence back to ApiSupportingInfo
-const transformSupportingSentenceToApiSupportingInfo = (sentence: SupportingSentence): ApiSupportingInfo => {
+const transformSupportingSentenceToApiSupportingInfo = (
+  sentence: SupportingSentence
+): ApiSupportingInfo => {
   return {
     supporting_sentence_in_document: sentence.text,
     document_name: sentence.document,
-    section_name: '', // Default empty as not stored in frontend
+    section_name: "", // Default empty as not stored in frontend
     page_number: sentence.page.toString(),
-    bbox: sentence.boundingBox ? convertBoundingBoxToBbox(sentence.boundingBox) : []
+    bbox: sentence.boundingBox
+      ? convertBoundingBoxToBbox(sentence.boundingBox)
+      : [],
   };
 };
 
 // Transform frontend comments to API format
-const transformCommentsToApiFormat = (comments: Comment[]): Array<{comment: string; user: string; timestamp: string}> => {
-  return comments.map(comment => ({
+const transformCommentsToApiFormat = (
+  comments: Comment[]
+): Array<{ comment: string; user_id: string; timestamp: string }> => {
+  return comments.map((comment) => ({
     comment: comment.text,
-    user: comment.user,
-    timestamp: comment.timestamp
+    user_id: comment.user,
+    timestamp: comment.timestamp,
   }));
 };
 
 // Transform CodeSuggestion to SaveCodeData format
-const transformCodeSuggestionToSaveData = (code: CodeSuggestion, codeComments: Comment[] = []): SaveCodeData => {
+const transformCodeSuggestionToSaveData = (
+  code: CodeSuggestion,
+  codeComments: Comment[] = []
+): SaveCodeData => {
   // Determine accept_code based on status and manual addition
   let acceptCode: boolean | undefined;
-  if (code.status === 'accepted' || code.isManuallyAdded) {
+  if (code.status === "accepted" || code.isManuallyAdded) {
     acceptCode = true;
-  } else if (code.status === 'rejected') {
+  } else if (code.status === "rejected") {
     acceptCode = false;
   } else {
     // For pending decisions, leave undefined (will be null in JSON)
@@ -85,7 +101,9 @@ const transformCodeSuggestionToSaveData = (code: CodeSuggestion, codeComments: C
   }
 
   // Transform supporting sentences back to API format
-  const supportingInfo = code.supportingSentences.map(transformSupportingSentenceToApiSupportingInfo);
+  const supportingInfo = code.supportingSentences.map(
+    transformSupportingSentenceToApiSupportingInfo
+  );
 
   // Transform comments to API format
   const apiComments = transformCommentsToApiFormat(codeComments);
@@ -94,54 +112,66 @@ const transformCodeSuggestionToSaveData = (code: CodeSuggestion, codeComments: C
     code_id: code.apiCodeId || code.id,
     diagnosis_code: code.code,
     disease_description: code.description,
-    rank: code.status === 'rejected' ? -1 : code.order + 1, // Convert 0-based to 1-based, -1 for rejected
+    rank: code.status === "rejected" ? -1 : code.order + 1, // Convert 0-based to 1-based, -1 for rejected
     accept_code: acceptCode,
-    code_type: code.isManuallyAdded ? 'HUMAN' : 'AI_MODEL',
-    considered_but_excluded: code.consideredButExcluded || (code.status === 'rejected'),
-    reason_for_exclusion: code.reasonForExclusion || (code.status === 'rejected' ? 'Rejected by coder' : ''),
+    code_type: code.isManuallyAdded ? "HUMAN" : "AI_MODEL",
+    considered_but_excluded:
+      code.consideredButExcluded || code.status === "rejected",
+    reason_for_exclusion:
+      code.reasonForExclusion ||
+      (code.status === "rejected" ? "Rejected by coder" : ""),
     reason_for_coding: code.aiReasoning,
     active_disease_asof_1june2025: code.activeDiseaseAsOfJune2025 ?? true,
-    supporting_sentence_for_active_disease: code.supportingSentenceForActiveDisease || code.supportingSentences[0]?.text || '',
+    supporting_sentence_for_active_disease:
+      code.supportingSentenceForActiveDisease ||
+      code.supportingSentences[0]?.text ||
+      "",
     active_management_asof_1june2025: code.activeManagementAsOfJune2025 ?? true,
-    supporting_sentence_for_active_management: code.supportingSentenceForActiveManagement || code.aiReasoning,
+    supporting_sentence_for_active_management:
+      code.supportingSentenceForActiveManagement || code.aiReasoning,
     supporting_info: supportingInfo,
     updated_at: code.updatedAt,
     last_reordered_by: code.lastReorderedBy,
     user_decisions: undefined,
     comments: apiComments,
     deleted: false,
-    added_by: code.isManuallyAdded ? 'coder' : undefined,
-    created_at: code.addedTimestamp ? new Date(code.addedTimestamp).toISOString() : undefined
+    added_by: code.isManuallyAdded ? "coder" : undefined,
+    created_at: code.addedTimestamp
+      ? new Date(code.addedTimestamp).toISOString()
+      : undefined,
   };
 };
 
 export const saveCodingOrder = async (
-  docId: string, 
-  primaryCodes: CodeSuggestion[], 
+  docId: string,
+  primaryCodes: CodeSuggestion[],
   secondaryCodes: CodeSuggestion[],
   comments: Record<string, Comment[]> = {}
 ): Promise<void> => {
   try {
     // Transform codes to API format
-    const primaryCodesData = primaryCodes.map(code => 
+    const primaryCodesData = primaryCodes.map((code) =>
       transformCodeSuggestionToSaveData(code, comments[code.id] || [])
     );
-    const secondaryCodesData = secondaryCodes.map(code => 
+    const secondaryCodesData = secondaryCodes.map((code) =>
       transformCodeSuggestionToSaveData(code, comments[code.id] || [])
     );
 
     const requestBody: SaveCodingOrderRequest = {
       primary_codes: primaryCodesData,
-      secondary_codes: secondaryCodesData
+      secondary_codes: secondaryCodesData,
     };
 
-    console.log('Saving coding order with payload:', JSON.stringify(requestBody, null, 2));
+    console.log(
+      "Saving coding order with payload:",
+      JSON.stringify(requestBody, null, 2)
+    );
 
     await apiClient.patch(`/coding-results/${docId}`, requestBody);
 
-    console.log('Coding order saved successfully');
+    console.log("Coding order saved successfully");
   } catch (error) {
-    console.error('Error saving coding order:', error);
+    console.error("Error saving coding order:", error);
     throw error;
   }
 };
