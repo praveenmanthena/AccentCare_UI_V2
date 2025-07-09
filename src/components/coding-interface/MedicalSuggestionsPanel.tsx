@@ -360,7 +360,7 @@ export const MedicalSuggestionsPanel: React.FC<
           </div>
           <div
             className="mb-4 w-full"
-            style={{ width: "50%", marginTop: "15px" }}
+            style={{ width: "60%", marginTop: "18px" }}
           >
             <div className="relative">
               <input
