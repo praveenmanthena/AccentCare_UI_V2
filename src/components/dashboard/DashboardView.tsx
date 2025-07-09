@@ -3,6 +3,7 @@ import {
   AlertCircle,
   Calendar,
   CheckCircle,
+  ChevronDown,
   Clock,
   Eye,
   FileText,
@@ -11,7 +12,8 @@ import {
   TrendingUp,
   User,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
+
 import PenguinLogo from "../../../public/images/penguin-logo.svg";
 import { useDashboardApi } from "../../hooks/useDashboardApi";
 
@@ -34,6 +36,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     error,
     refreshData,
   } = useDashboardApi();
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   if (loading) {
     return (
@@ -103,29 +106,91 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               />
             </button>
 
-            {/* User Profile Section */}
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <User className="w-4 h-4 text-white" />
-              </div>
-              <div className="text-right">
-                <div className="text-sm font-semibold text-gray-900">
-                  <span style={{ textTransform: "capitalize" }}>
-                    {localStorage.getItem("username")?.split("@")[0]}
+              {/* Dashboard Button */}
+
+              {/* User Profile with Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">
+                    <span style={{ textTransform: "capitalize" }}>
+                      {localStorage.getItem("username")?.split("@")[0]}
+                    </span>
                   </span>
-                </div>
-                <div className="text-xs text-gray-500">Medical Coder</div>
+                  <ChevronDown
+                    className={`w-4 h-4 text-gray-500 transition-transform ${
+                      showUserMenu ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* User Dropdown Menu */}
+                {showUserMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    {/* User Info Section */}
+                    <div className="p-4 border-b border-gray-100">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                          <User className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <div
+                            className="text-sm text-gray-600"
+                            style={{ textTransform: "capitalize" }}
+                          >
+                            {localStorage.getItem("username")}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            Medical Coding Specialist
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Menu Items */}
+                    <div className="p-2">
+                      <button
+                        onClick={onLogout}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-red-50 rounded-lg transition-colors group"
+                      >
+                        <div className="w-8 h-8 bg-red-100 group-hover:bg-red-200 rounded-full flex items-center justify-center transition-colors">
+                          <LogOut className="w-4 h-4 text-red-600" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-800 group-hover:text-red-800">
+                            Sign Out
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            End current session
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="p-3 border-t border-gray-100 bg-gray-50 rounded-b-lg">
+                      <div className="text-xs text-gray-500 text-center">
+                        PenguinAI Medical Coding Platform v2.1
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Overlay to close dropdown when clicking outside */}
+                {showUserMenu && (
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowUserMenu(false)}
+                  />
+                )}
               </div>
             </div>
-
-            {/* Logout Button */}
-            <button
-              onClick={onLogout}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors"
-              title="Logout"
-            >
-              <LogOut className="w-5 h-5" />
-            </button>
           </div>
         </div>
       </div>
@@ -239,7 +304,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                <div
+                  className="w-3 h-3 bg-purple-500 rounded-full"
+                  style={{ background: "#8107f5" }}
+                ></div>
                 <span
                   className="text-sm font-medium text-gray-700"
                   style={{ fontSize: "12px" }}
@@ -330,8 +398,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                               </>
                             ) : (
                               <>
-                                <Clock className="w-4 h-4 text-orange-600" />
-                                <span className="inline-flex px-2 py-1 text-xs font-bold rounded-full bg-orange-100 text-orange-800">
+                                <Clock className="w-4 h-4 text-yellow-600" />
+                                <span
+                                  className="inline-flex px-2 py-1 text-xs font-bold rounded-full bg-yellow-100 text-black-800"
+                                  style={{ background: "#ffff00" }}
+                                >
                                   {episode.review_status}
                                 </span>
                               </>
@@ -367,7 +438,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                             {/* Newly Added Count */}
                             <div className="flex items-center gap-1 min-w-[30px]">
-                              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                              <div
+                                className="w-2 h-2 bg-purple-500 rounded-full"
+                                style={{ background: "#8107f5" }}
+                              ></div>
                               <span className="text-sm font-bold text-purple-600">
                                 {episode?.newly_added_count}
                               </span>

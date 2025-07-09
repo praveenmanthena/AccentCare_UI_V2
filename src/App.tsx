@@ -49,6 +49,7 @@ const HomeHealthCodingInterface = () => {
     auth.logout(); // This clears the token and sets isLoggedIn to false
     setShowDashboard(true);
     setSelectedEpisodeDocId(null);
+    window.location.reload();
   };
 
   // Render different views based on state
