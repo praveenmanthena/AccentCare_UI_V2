@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { PDFViewer } from '../pdf-viewer/PDFViewer';
-import { CodeSuggestion } from '../medical-suggestions/CodeSuggestion';
-import { ICDModal } from '../medical-suggestions/ICDModal';
-import { BrandedHeader } from './BrandedHeader';
-import { CodingHeader } from './CodingHeader';
-import { MedicalSuggestionsPanel } from './MedicalSuggestionsPanel';
-import { useDocumentViewer } from '../../hooks/useDocumentViewer';
-import { useCodingState } from '../../hooks/useCodingState';
-import { useICDSearch } from '../../hooks/useICDSearch';
-import { usePdfSearch } from '../../hooks/usePdfSearch';
-import { useResizablePanel } from '../../hooks/useResizablePanel';
-import { SelectedArea, CodeSuggestion as CodeSuggestionType, Document, DocumentContent, ApiReviewStats } from '../../types';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useCodingState } from "../../hooks/useCodingState";
+import { useDocumentViewer } from "../../hooks/useDocumentViewer";
+import { useICDSearch } from "../../hooks/useICDSearch";
+import { usePdfSearch } from "../../hooks/usePdfSearch";
+import { useResizablePanel } from "../../hooks/useResizablePanel";
+import {
+  ApiReviewStats,
+  CodeSuggestion as CodeSuggestionType,
+  Document,
+  DocumentContent,
+  SelectedArea,
+} from "../../types";
+import { ICDModal } from "../medical-suggestions/ICDModal";
+import { PDFViewer } from "../pdf-viewer/PDFViewer";
+import { BrandedHeader } from "./BrandedHeader";
+import { CodingHeader } from "./CodingHeader";
+import { MedicalSuggestionsPanel } from "./MedicalSuggestionsPanel";
 
 interface CodingInterfaceProps {
   selectedEpisodeDocId: string;
@@ -32,7 +37,7 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
   secondarySuggestions,
   reviewStats,
   comments,
-  onReturnToDashboard
+  onReturnToDashboard,
 }) => {
   const documentViewer = useDocumentViewer(documents, documentContent);
   const codingState = useCodingState({
@@ -40,7 +45,7 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
     initialSecondarySuggestions: secondarySuggestions,
     initialComments: comments,
     reviewStats,
-    selectedEpisodeDocId
+    selectedEpisodeDocId,
   });
   const icdSearch = useICDSearch();
   const pdfSearch = usePdfSearch(selectedEpisodeDocId);
@@ -50,7 +55,9 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
   const [commentEditMode, setCommentEditMode] = useState(new Set<string>());
   const [tempComments, setTempComments] = useState<Record<string, string>>({});
   const [isAddingComment, setIsAddingComment] = useState(new Set<string>());
-  const [cursorPositions, setCursorPositions] = useState<Record<string, number>>({});
+  const [cursorPositions, setCursorPositions] = useState<
+    Record<string, number>
+  >({});
 
   // Listen for escape key cancellation from PDFViewer
   useEffect(() => {
@@ -58,10 +65,13 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
       icdSearch.cancelICDAddition();
     };
 
-    document.addEventListener('cancelICDAddition', handleCancelICDAddition);
+    document.addEventListener("cancelICDAddition", handleCancelICDAddition);
 
     return () => {
-      document.removeEventListener('cancelICDAddition', handleCancelICDAddition);
+      document.removeEventListener(
+        "cancelICDAddition",
+        handleCancelICDAddition
+      );
     };
   }, [icdSearch]);
 
@@ -80,7 +90,11 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
   };
 
   const submitNewICD = () => {
-    if (icdSearch.selectedIcdCode && icdSearch.codingReason.trim() && icdSearch.selectedArea) {
+    if (
+      icdSearch.selectedIcdCode &&
+      icdSearch.codingReason.trim() &&
+      icdSearch.selectedArea
+    ) {
       const newCode: CodeSuggestionType = {
         id: Date.now().toString(),
         code: icdSearch.selectedIcdCode.code,
@@ -88,7 +102,7 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
         confidence: 1.0,
         hippsPoints: 0,
         isHippsContributor: false,
-        status: 'pending',
+        status: "pending",
         isManuallyAdded: true,
         aiReasoning: `Manually added by coding staff. Reason: ${icdSearch.codingReason.trim()}`,
         supportingSentences: [
@@ -101,21 +115,22 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
               x_min: icdSearch.selectedArea.x_min,
               y_min: icdSearch.selectedArea.y_min,
               x_max: icdSearch.selectedArea.x_max,
-              y_max: icdSearch.selectedArea.y_max
-            }
-          }
+              y_max: icdSearch.selectedArea.y_max,
+            },
+          },
         ],
         addedTimestamp: new Date().toLocaleString(),
         location: icdSearch.selectedArea,
-        order: icdSearch.selectedIcdType === 'primary' 
-          ? codingState.primarySuggestions.length 
-          : codingState.secondarySuggestions.length
+        order:
+          icdSearch.selectedIcdType === "primary"
+            ? codingState.primarySuggestions.length
+            : codingState.secondarySuggestions.length,
       };
 
-      if (icdSearch.selectedIcdType === 'primary') {
-        codingState.setPrimarySuggestions(prev => [...prev, newCode]);
+      if (icdSearch.selectedIcdType === "primary") {
+        codingState.setPrimarySuggestions((prev) => [...prev, newCode]);
       } else {
-        codingState.setSecondarySuggestions(prev => [...prev, newCode]);
+        codingState.setSecondarySuggestions((prev) => [...prev, newCode]);
       }
 
       icdSearch.resetModalState();
@@ -123,52 +138,57 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
   };
 
   // Comment management functions
-  const handleCommentChange = (key: string, value: string, cursorPosition: number) => {
-    setCursorPositions(prev => ({ ...prev, [key]: cursorPosition }));
-    setTempComments(prev => ({ ...prev, [key]: value }));
+  const handleCommentChange = (
+    key: string,
+    value: string,
+    cursorPosition: number
+  ) => {
+    setCursorPositions((prev) => ({ ...prev, [key]: cursorPosition }));
+    setTempComments((prev) => ({ ...prev, [key]: value }));
   };
 
   const startAddingComment = (codeId: string) => {
-    setIsAddingComment(prev => new Set([...prev, codeId]));
-    setTempComments(prev => ({ ...prev, [`new-${codeId}`]: '' }));
+    setIsAddingComment((prev) => new Set([...prev, codeId]));
+    setTempComments((prev) => ({ ...prev, [`new-${codeId}`]: "" }));
   };
 
   const startEditingComment = (codeId: string, commentId: string) => {
     const commentKey = `edit-${codeId}-${commentId}`;
-    setCommentEditMode(prev => new Set([...prev, commentKey]));
+    setCommentEditMode((prev) => new Set([...prev, commentKey]));
     const existingComments = codingState.comments[codeId] || [];
-    const commentToEdit = existingComments.find(c => c.id === commentId);
-    setTempComments(prev => ({
+    const commentToEdit = existingComments.find((c) => c.id === commentId);
+    setTempComments((prev) => ({
       ...prev,
-      [commentKey]: commentToEdit ? commentToEdit.text : ''
+      [commentKey]: commentToEdit ? commentToEdit.text : "",
     }));
   };
 
   const submitNewComment = (codeId: string) => {
-    const newCommentText = tempComments[`new-${codeId}`] || '';
+    const newCommentText = tempComments[`new-${codeId}`] || "";
     if (newCommentText.trim()) {
-      const currentUser = localStorage.getItem("username")?.split("@")[0] || "User";
+      const currentUser =
+        localStorage.getItem("username")?.split("@")[0] || "User";
       const currentTimestamp = new Date().toISOString();
-      
+
       const newComment = {
         id: Date.now().toString(),
         text: newCommentText.trim(),
         timestamp: currentTimestamp,
-        user: currentUser
+        user: currentUser,
       };
-      
-      codingState.setComments(prev => ({
+
+      codingState.setComments((prev) => ({
         ...prev,
-        [codeId]: [...(prev[codeId] || []), newComment]
+        [codeId]: [...(prev[codeId] || []), newComment],
       }));
     }
-    
-    setIsAddingComment(prev => {
+
+    setIsAddingComment((prev) => {
       const newSet = new Set(prev);
       newSet.delete(codeId);
       return newSet;
     });
-    setTempComments(prev => {
+    setTempComments((prev) => {
       const newTemp = { ...prev };
       delete newTemp[`new-${codeId}`];
       return newTemp;
@@ -177,29 +197,29 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
 
   const submitEditComment = (codeId: string, commentId: string) => {
     const commentKey = `edit-${codeId}-${commentId}`;
-    const editedText = tempComments[commentKey] || '';
-    
+    const editedText = tempComments[commentKey] || "";
+
     if (editedText.trim()) {
-      codingState.setComments(prev => ({
+      codingState.setComments((prev) => ({
         ...prev,
-        [codeId]: (prev[codeId] || []).map(comment => 
-          comment.id === commentId 
-            ? { 
-                ...comment, 
+        [codeId]: (prev[codeId] || []).map((comment) =>
+          comment.id === commentId
+            ? {
+                ...comment,
                 text: editedText.trim(),
-                timestamp: new Date().toISOString() // Update timestamp when edited
+                timestamp: new Date().toISOString(), // Update timestamp when edited
               }
             : comment
-        )
+        ),
       }));
     }
-    
-    setCommentEditMode(prev => {
+
+    setCommentEditMode((prev) => {
       const newSet = new Set(prev);
       newSet.delete(commentKey);
       return newSet;
     });
-    setTempComments(prev => {
+    setTempComments((prev) => {
       const newTemp = { ...prev };
       delete newTemp[commentKey];
       return newTemp;
@@ -207,12 +227,12 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
   };
 
   const cancelNewComment = (codeId: string) => {
-    setIsAddingComment(prev => {
+    setIsAddingComment((prev) => {
       const newSet = new Set(prev);
       newSet.delete(codeId);
       return newSet;
     });
-    setTempComments(prev => {
+    setTempComments((prev) => {
       const newTemp = { ...prev };
       delete newTemp[`new-${codeId}`];
       return newTemp;
@@ -221,12 +241,12 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
 
   const cancelEditComment = (codeId: string, commentId: string) => {
     const commentKey = `edit-${codeId}-${commentId}`;
-    setCommentEditMode(prev => {
+    setCommentEditMode((prev) => {
       const newSet = new Set(prev);
       newSet.delete(commentKey);
       return newSet;
     });
-    setTempComments(prev => {
+    setTempComments((prev) => {
       const newTemp = { ...prev };
       delete newTemp[commentKey];
       return newTemp;
@@ -240,27 +260,38 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
 
   // Filter codes based on active tab and search term
   const getFilteredCodes = () => {
-    const allCodes = [...codingState.primarySuggestions, ...codingState.secondarySuggestions];
-    
+    const allCodes = [
+      ...codingState.primarySuggestions,
+      ...codingState.secondarySuggestions,
+    ];
+
     // Apply search filter first
     let filteredCodes = allCodes;
     if (codingState.searchTerm.length >= 2) {
-      filteredCodes = allCodes.filter(code => 
-        code.code.toLowerCase().includes(codingState.searchTerm.toLowerCase()) ||
-        code.description.toLowerCase().includes(codingState.searchTerm.toLowerCase())
+      filteredCodes = allCodes.filter(
+        (code) =>
+          code.code
+            .toLowerCase()
+            .includes(codingState.searchTerm.toLowerCase()) ||
+          code.description
+            .toLowerCase()
+            .includes(codingState.searchTerm.toLowerCase())
       );
     }
 
     // Apply tab filter
     switch (codingState.activeTab) {
-      case 'accepted':
-        return filteredCodes.filter(code => 
-          codingState.selectedCodes.has(code.id) && !code.isManuallyAdded
+      case "accepted":
+        return filteredCodes.filter(
+          (code) =>
+            codingState.selectedCodes.has(code.id) && !code.isManuallyAdded
         );
-      case 'rejected':
-        return filteredCodes.filter(code => codingState.rejectedCodes.has(code.id));
-      case 'newly-added':
-        return filteredCodes.filter(code => code.isManuallyAdded);
+      case "rejected":
+        return filteredCodes.filter((code) =>
+          codingState.rejectedCodes.has(code.id)
+        );
+      case "newly-added":
+        return filteredCodes.filter((code) => code.isManuallyAdded);
       default:
         return filteredCodes;
     }
@@ -276,9 +307,12 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
       />
 
       {/* Main Content Area */}
-      <div className="flex flex-1 overflow-hidden" ref={resizablePanel.containerRef}>
+      <div
+        className="flex flex-1 overflow-hidden"
+        ref={resizablePanel.containerRef}
+      >
         {/* PDF Viewer Side */}
-        <div 
+        <div
           className="bg-white border-r border-gray-200 flex flex-col"
           style={{ width: `${resizablePanel.leftPanelWidth}%` }}
         >
@@ -306,10 +340,12 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
             // PDF Search props
             searchTerm={pdfSearch.searchTerm}
             onSearchTermChange={(term) => {
-              console.log('CodingInterface: Search term change:', term); // Debug log
+              console.log("CodingInterface: Search term change:", term); // Debug log
               pdfSearch.setSearchTerm(term);
             }}
-            onSearchSubmit={() => pdfSearch.performPdfSearch(pdfSearch.searchTerm)}
+            onSearchSubmit={() =>
+              pdfSearch.performPdfSearch(pdfSearch.searchTerm)
+            }
             searchResults={pdfSearch.searchResults}
             currentMatchIndex={pdfSearch.currentMatchIndex}
             totalMatches={pdfSearch.totalMatches}
@@ -353,7 +389,7 @@ export const CodingInterface: React.FC<CodingInterfaceProps> = ({
         </div>
 
         {/* Medical Suggestions Side */}
-        <div 
+        <div
           className="bg-white flex flex-col"
           style={{ width: `${100 - resizablePanel.leftPanelWidth}%` }}
         >

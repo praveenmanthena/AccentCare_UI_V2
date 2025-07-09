@@ -255,8 +255,8 @@ export const MedicalSuggestionsPanel: React.FC<
       onDragEnd={handleDragEnd}
     >
       {/* Header */}
-      <div className="border-b border-gray-200 p-4">
-        <div className="flex items-center justify-between mb-4">
+      <div className="border-b border-gray-200 p-4 pt-2 pb-2">
+        <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-bold text-gray-800">
               Medical Suggestions
@@ -358,7 +358,23 @@ export const MedicalSuggestionsPanel: React.FC<
               )}
             </div>
           </div>
-
+          <div
+            className="mb-4 w-full"
+            style={{ width: "50%", marginTop: "15px" }}
+          >
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search ICD codes"
+                value={codingState.searchTerm}
+                onChange={(e) => codingState.setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm font-medium"
+              />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+            </div>
+          </div>
           {/* HIPPS Details and Save Button */}
           <div className="flex items-center gap-3">
             {/* HIPPS Details Button */}
@@ -384,7 +400,7 @@ export const MedicalSuggestionsPanel: React.FC<
         </div>
 
         {/* Decision Progress */}
-        <div className="mb-4">
+        <div className="mb-3">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-xs font-medium text-gray-500">
               Decision Progress
@@ -392,7 +408,16 @@ export const MedicalSuggestionsPanel: React.FC<
             <div className="flex items-center gap-3">
               <span className="text-xs text-gray-500">
                 {codingState.completedDecisions} of{" "}
-                {codingState.aiSuggestionsCount} AI recommendations completed
+                {codingState.aiSuggestionsCount}
+                <span
+                  style={{
+                    color: "#6366f1",
+                    fontWeight: "bold",
+                    marginLeft: "5px",
+                  }}
+                >
+                  AI recommendations completed{" "}
+                </span>
               </span>
               {codingState.lastSaved && (
                 <span className="text-xs text-green-600 font-medium">
@@ -414,20 +439,6 @@ export const MedicalSuggestionsPanel: React.FC<
           </div>
         </div>
         {/* Search Box */}
-        <div className="mb-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search ICD codes"
-              value={codingState.searchTerm}
-              onChange={(e) => codingState.setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm font-medium"
-            />
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-gray-400" />
-            </div>
-          </div>
-        </div>
 
         {/* 4-Tab Navigation */}
         <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
@@ -442,7 +453,7 @@ export const MedicalSuggestionsPanel: React.FC<
             Total ICD List
             <span
               className="ml-1 px-2 py-0.5 bg-indigo-500 text-white-700 rounded-full text-xs font-bold"
-              style={{ color: "#fff" }}
+              style={{ color: "#fff", background: "#4ab0b7" }}
             >
               {codingState.primarySuggestions.filter(
                 (code: any) => !codingState.rejectedCodes.has(code.id)
@@ -506,14 +517,14 @@ export const MedicalSuggestionsPanel: React.FC<
       {/* Legend Section */}
 
       {/* Content Area */}
-      <div className="flex-1 overflow-auto p-4">
+      <div className="flex-1 overflow-auto p-4 pt-2 pb-2">
         {/* Render suggestions based on active tab */}
         {codingState.activeTab === "all" &&
         codingState.searchTerm.length < 2 ? (
           <>
             {/* Primary Suggestions - Green Background Section */}
             <div
-              className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4"
+              className="mb-3 bg-green-50 border border-green-200 rounded-lg p-4"
               style={{ paddingTop: "12px" }}
             >
               <div className="flex items-center justify-between mb-4">
