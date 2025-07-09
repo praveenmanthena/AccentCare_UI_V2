@@ -118,6 +118,8 @@ export interface ProjectData {
   accept_count: number;
   reject_count: number;
   remaining_count: number;
+  ai_generated_count: number;
+  newly_added_count: number;
   review_status: string;
   episode_id: string;
   // Enhanced fields for dashboard display

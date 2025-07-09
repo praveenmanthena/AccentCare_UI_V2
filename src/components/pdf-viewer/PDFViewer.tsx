@@ -254,23 +254,17 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({
       
       const container = scrollContainerRef.current;
       
-      // Detect trackpad vs mouse wheel
-      const isTrackpad = Math.abs(e.deltaY) < 50 && e.deltaMode === 0;
+      // Simplified scroll handling - use deltaY directly with slight damping
+      // This works well for both mouse wheel and trackpad
+      let scrollAmount = e.deltaY;
       
-      let scrollAmount: number;
-      
-      if (isTrackpad) {
-        // Trackpad: Use direct delta for natural feel
-        scrollAmount = e.deltaY * 0.5; // Slightly damped for smoothness
+      // Apply slight damping for smoother experience
+      if (e.deltaMode === 0) {
+        // Pixel mode (trackpad) - use direct delta with light damping
+        scrollAmount = e.deltaY * 0.8;
       } else {
-        // Mouse wheel: Use larger increments
-        scrollAmount = e.deltaY > 0 ? 120 : -120;
-      }
-      
-      // Handle horizontal scrolling for trackpads
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && isTrackpad) {
-        // Horizontal scroll - ignore for now as we want vertical scrolling
-        return;
+        // Line/page mode (mouse wheel) - normalize to reasonable pixel values
+        scrollAmount = e.deltaY * 40;
       }
       
       const targetScroll = Math.max(0, Math.min(
@@ -278,13 +272,9 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({
         container.scrollTop + scrollAmount
       ));
       
-      if (isTrackpad) {
-        // Trackpad: Direct scroll for immediate response
-        container.scrollTop = targetScroll;
-      } else {
-        // Mouse wheel: Smooth animated scroll
-        smoothScrollTo(targetScroll, 200);
-      }
+      // Use direct scroll for immediate, responsive feel
+      // This eliminates the jittery behavior from mixing direct and animated scrolling
+      container.scrollTop = targetScroll;
     };
 
     const container = scrollContainerRef.current;

@@ -11,7 +11,7 @@ export const useDashboardApi = () => {
   const determineDocStatus = (project: ProjectData): DocStatusType => {
     if (project.review_status === 'COMPLETED') {
       return 'Complete';
-    } else if (project.review_status === 'IN PROGRESS') {
+    } else if (project.review_status === 'IN PROGRESS' || project.review_status === 'YET TO REVIEW') {
       // Use reject_count to determine if inconsistent
       return project.reject_count > 0 ? 'Inconsistent' : 'Incomplete';
     } else {
@@ -139,7 +139,7 @@ export const useDashboardApi = () => {
           accept_count: 0,
           reject_count: 0,
           remaining_count: 13,
-          review_status: "IN PROGRESS",
+          review_status: "YET TO REVIEW",
           episode_id: "EP_DAVID_WILLIAMS",
           revenueRate: "—",
           docStatus: "Incomplete"

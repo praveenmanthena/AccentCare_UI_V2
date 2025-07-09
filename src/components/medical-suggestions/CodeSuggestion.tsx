@@ -1,5 +1,4 @@
 import {
-  Award,
   Check,
   ChevronDown,
   ChevronUp,
@@ -79,57 +78,11 @@ export const CodeSuggestion: React.FC<CodeSuggestionProps> = ({
   const isPending = !isAccepted && !isRejected;
   const hasExistingComments = existingComments.length > 0;
 
-  // Helper function to get HIPPS priority styling
-  const getHippsPriorityStyle = (points: number) => {
-    if (points >= 20) {
-      return {
-        bgColor: "bg-red-100",
-        textColor: "text-red-800",
-        borderColor: "border-red-300",
-        priority: "CRITICAL",
-      };
-    } else if (points >= 15) {
-      return {
-        bgColor: "bg-orange-100",
-        textColor: "text-orange-800",
-        borderColor: "border-orange-300",
-        priority: "HIGH",
-      };
-    } else if (points >= 10) {
-      return {
-        bgColor: "bg-yellow-100",
-        textColor: "text-yellow-800",
-        borderColor: "border-yellow-300",
-        priority: "MEDIUM",
-      };
-    } else if (points >= 5) {
-      return {
-        bgColor: "bg-blue-100",
-        textColor: "text-blue-800",
-        borderColor: "border-blue-300",
-        priority: "LOW",
-      };
-    } else {
-      return {
-        bgColor: "bg-gray-100",
-        textColor: "text-gray-700",
-        borderColor: "border-gray-300",
-        priority: "MINIMAL",
-      };
-    }
-  };
-
-  const hippsStyle = suggestion.isHippsContributor
-    ? getHippsPriorityStyle(suggestion.hippsPoints)
-    : null;
-
   return (
     <div
       className={`border rounded-lg p-3 mb-2 bg-white transition-all duration-300 relative ${
         isDragging
           ? "opacity-60 shadow-2xl border-blue-300 z-50" // UPDATED: More transparent (0.6 -> 0.6)
-          : suggestion.isHippsContributor && suggestion.hippsPoints >= 15
-          ? "border-orange-300"
           : "border-gray-200 hover:border-gray-300"
       }`}
     >
@@ -216,21 +169,6 @@ export const CodeSuggestion: React.FC<CodeSuggestionProps> = ({
               AI
             </span>
           )}
-
-          {/* HIPPS Points - Enhanced with priority styling */}
-          {/* {suggestion.isHippsContributor && hippsStyle && (
-            <div
-              className={`flex items-center gap-1 flex-shrink-0 px-2 py-1 rounded border transition-all duration-200 ${hippsStyle.bgColor} ${hippsStyle.textColor} ${hippsStyle.borderColor}`}
-            >
-              <Award className="w-3 h-3" />
-              <span className="text-xs font-bold">
-                +{suggestion.hippsPoints}
-              </span>
-              <span className="text-xs font-semibold opacity-75">
-                {hippsStyle.priority}
-              </span>
-            </div>
-          )} */}
 
           {/* Comments Indicator */}
           {hasExistingComments && (
@@ -323,22 +261,6 @@ export const CodeSuggestion: React.FC<CodeSuggestionProps> = ({
         </div>
       </div>
 
-      {/* HIPPS Priority Banner for High-Value Codes */}
-      {suggestion.isHippsContributor && suggestion.hippsPoints >= 20 && (
-        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg transition-all duration-200">
-          <div className="flex items-center gap-2">
-            <Award className="w-4 h-4 text-red-600" />
-            <span className="text-sm font-bold text-red-800">
-              CRITICAL HIPPS CONTRIBUTOR - {suggestion.hippsPoints} Points
-            </span>
-          </div>
-          <p className="text-xs text-red-700 mt-1 font-medium">
-            This code significantly impacts reimbursement. Review carefully
-            before making decisions.
-          </p>
-        </div>
-      )}
-
       {/* Expanded Content */}
       {isExpanded && (
         <div className="mt-3 pt-3 border-t border-gray-200 space-y-4">
@@ -348,62 +270,6 @@ export const CodeSuggestion: React.FC<CodeSuggestionProps> = ({
               {suggestion.description}
             </p>
           </div>
-
-          {/* HIPPS Information - Detailed view when expanded */}
-          {suggestion.isHippsContributor && (
-            <div
-              className={`p-3 rounded-lg border transition-all duration-200 ${hippsStyle?.bgColor} ${hippsStyle?.borderColor}`}
-            >
-              <h4
-                className={`font-bold mb-2 text-sm flex items-center gap-2 ${hippsStyle?.textColor}`}
-              >
-                <Award className="w-4 h-4" />
-                HIPPS Score Impact
-              </h4>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className={`font-semibold ${hippsStyle?.textColor}`}>
-                    Points:
-                  </span>
-                  <span className={`ml-2 font-bold ${hippsStyle?.textColor}`}>
-                    +{suggestion.hippsPoints}
-                  </span>
-                </div>
-                <div>
-                  <span className={`font-semibold ${hippsStyle?.textColor}`}>
-                    Priority:
-                  </span>
-                  <span className={`ml-2 font-bold ${hippsStyle?.textColor}`}>
-                    {hippsStyle?.priority}
-                  </span>
-                </div>
-                <div>
-                  <span className={`font-semibold ${hippsStyle?.textColor}`}>
-                    Revenue Impact:
-                  </span>
-                  <span className={`ml-2 font-bold ${hippsStyle?.textColor}`}>
-                    ${(suggestion.hippsPoints * 2.15).toFixed(0)}
-                  </span>
-                </div>
-                <div>
-                  <span className={`font-semibold ${hippsStyle?.textColor}`}>
-                    Category:
-                  </span>
-                  <span className={`ml-2 font-bold ${hippsStyle?.textColor}`}>
-                    {suggestion.hippsPoints >= 20
-                      ? "Critical"
-                      : suggestion.hippsPoints >= 15
-                      ? "High Value"
-                      : suggestion.hippsPoints >= 10
-                      ? "Medium Value"
-                      : suggestion.hippsPoints >= 5
-                      ? "Standard"
-                      : "Minimal"}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* AI Reasoning */}
           <div>

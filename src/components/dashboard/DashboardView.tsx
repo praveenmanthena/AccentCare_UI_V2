@@ -211,7 +211,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Right side: Status Legend */}
           <div className="flex items-center gap-4 ">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-indigo-500 rounded-full"></div>
               <span
                 className="text-sm font-medium text-gray-700"
                 style={{ fontSize: "12px" }}
@@ -221,7 +221,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 <span
                   className="text-sm font-medium text-gray-700"
                   style={{ fontSize: "12px" }}
@@ -230,7 +230,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <span
                   className="text-sm font-medium text-gray-700"
                   style={{ fontSize: "12px" }}
@@ -321,11 +321,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   COMPLETED
                                 </span>
                               </>
+                            ) : episode.review_status === "YET TO REVIEW" ? (
+                              <>
+                                <Clock className="w-4 h-4 text-gray-600" />
+                                <span className="inline-flex px-2 py-1 text-xs font-bold rounded-full bg-gray-100 text-gray-800">
+                                  YET TO REVIEW
+                                </span>
+                              </>
                             ) : (
                               <>
                                 <Clock className="w-4 h-4 text-orange-600" />
                                 <span className="inline-flex px-2 py-1 text-xs font-bold rounded-full bg-orange-100 text-orange-800">
-                                  IN PROGRESS
+                                  {episode.review_status}
                                 </span>
                               </>
                             )}
@@ -338,7 +345,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             <div className="flex items-center gap-1 min-w-[30px]">
                               <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
                               <span className="text-sm font-bold text-indigo-600">
-                                {episode.remaining_count}
+                                {episode.ai_generated_count}
                               </span>
                             </div>
 
