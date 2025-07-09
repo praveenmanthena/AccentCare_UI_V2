@@ -1,9 +1,15 @@
-import React from 'react';
-import { 
-  FileText, ChevronDown, Search, ChevronLeft, ChevronRight, X, Loader2
-} from 'lucide-react';
-import { PDFControls } from '../pdf-viewer/PDFControls';
-import { Document, SearchHighlight } from '../../types';
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Loader2,
+  Search,
+  X,
+} from "lucide-react";
+import React from "react";
+import { Document, SearchHighlight } from "../../types";
+import { PDFControls } from "../pdf-viewer/PDFControls";
 
 interface CodingHeaderProps {
   selectedEpisodeDocId: string;
@@ -76,10 +82,10 @@ export const CodingHeader: React.FC<CodingHeaderProps> = ({
   isCurrentTermSearched,
   onNextMatch,
   onPrevMatch,
-  onClearSearch
+  onClearSearch,
 }) => {
   const handleSearchKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       if (searchTerm.trim()) {
         onSearchSubmit();
@@ -99,11 +105,15 @@ export const CodingHeader: React.FC<CodingHeaderProps> = ({
               value={selectedDocument}
               onChange={(e) => onDocumentChange(e.target.value)}
               className="appearance-none bg-white border border-gray-300 rounded px-3 py-2 pr-8 text-sm font-semibold text-gray-700 hover:border-blue-500 focus:border-blue-500 focus:outline-none max-w-[200px] truncate"
-              title={documents.find(doc => doc.id === selectedDocument)?.name || ''}
+              title={
+                documents.find((doc) => doc.id === selectedDocument)?.name || ""
+              }
             >
-              {documents.map(doc => (
+              {documents.map((doc) => (
                 <option key={doc.id} value={doc.id}>
-                  {doc.name.length > 25 ? `${doc.name.substring(0, 25)}...` : doc.name}
+                  {doc.name.length > 25
+                    ? `${doc.name.substring(0, 25)}...`
+                    : doc.name}
                 </option>
               ))}
             </select>
@@ -124,7 +134,7 @@ export const CodingHeader: React.FC<CodingHeaderProps> = ({
               onKeyDown={handleSearchKeyDown}
               placeholder="Search in PDF (press Enter to search)..."
               className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm font-medium bg-white transition-all duration-200 ${
-                searchError ? 'border-red-300' : 'border-gray-300'
+                searchError ? "border-red-300" : "border-gray-300"
               }`}
               autoComplete="off"
               spellCheck="false"
@@ -136,7 +146,7 @@ export const CodingHeader: React.FC<CodingHeaderProps> = ({
                 <Search className="h-4 w-4 text-gray-400" />
               )}
             </div>
-            
+
             {/* Clear Search Button */}
             {searchTerm && (
               <button
@@ -148,26 +158,26 @@ export const CodingHeader: React.FC<CodingHeaderProps> = ({
               </button>
             )}
           </div>
-          
+
           {/* Search Status Indicator */}
           {searchTerm && !isCurrentTermSearched && !isSearching && (
             <div className="mt-1 text-xs text-orange-600 font-medium">
               Press Enter to search for "{searchTerm}"
             </div>
           )}
-          
+
           {/* Search Results Info and Navigation */}
           {hasSearchResults && (
             <div className="flex items-center justify-between mt-2 text-xs">
               <span className="text-gray-600 font-medium">
-                {totalMatches} match{totalMatches !== 1 ? 'es' : ''} found
+                {totalMatches} match{totalMatches !== 1 ? "es" : ""} found
                 {hasMultipleResults && (
                   <span className="ml-2">
                     ({currentMatchIndex + 1} of {searchResults.length})
                   </span>
                 )}
               </span>
-              
+
               {/* Navigation Buttons */}
               {hasMultipleResults && (
                 <div className="flex items-center gap-1">
@@ -189,20 +199,24 @@ export const CodingHeader: React.FC<CodingHeaderProps> = ({
               )}
             </div>
           )}
-          
+
           {/* Search Error */}
           {searchError && (
-            <div className="mt-2 text-xs text-red-600 font-medium">
-              {searchError}
-            </div>
-          )}
-          
-          {/* No Results Message */}
-          {searchTerm && isCurrentTermSearched && !isSearching && !hasSearchResults && !searchError && (
             <div className="mt-2 text-xs text-gray-500 font-medium">
               No matches found for "{searchTerm}"
             </div>
           )}
+
+          {/* No Results Message */}
+          {searchTerm &&
+            isCurrentTermSearched &&
+            !isSearching &&
+            !hasSearchResults &&
+            !searchError && (
+              <div className="mt-2 text-xs text-gray-500 font-medium">
+                No matches found for "{searchTerm}"
+              </div>
+            )}
         </div>
 
         {/* Right: PDF Controls */}
